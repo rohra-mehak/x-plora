@@ -1,7 +1,6 @@
 from enum import auto
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.expressions import Value
 from django.urls import reverse
 from datetime import datetime, date
 from ckeditor.fields import RichTextField
@@ -9,7 +8,10 @@ from ckeditor.fields import RichTextField
 
 # Create your models here.
 
-
+class CUser(models.Model):
+      user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user")
+      Name_of_Organization = models.CharField( name= "Name_of_Organization" ,max_length=500, blank = True)
+      profession =models.CharField(name ="profession", max_length=100 , blank=True)
 class Problem(models.Model):
 
  
@@ -23,7 +25,7 @@ Problem/ Data set Description
    title  = models.CharField( max_length =500 ,unique=True)
    dataset_description = models.TextField()
    created_on = models.DateTimeField(auto_now_add=True)
-   dataset_provision_email = "xyz@somemail.com"
+   dataset_provision_email =  "Please attach your data to - xyz@somemail.com"
 
 class  Stage(models.Model):
    """  StageID
@@ -51,3 +53,6 @@ class  Stage(models.Model):
 class Solution(models.Model):
       solution_to =  models.OneToOneField(Problem, on_delete=models.CASCADE)
       solution_link = models.URLField(default="", unique=True)
+
+
+
