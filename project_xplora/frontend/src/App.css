@@ -1,0 +1,20 @@
+.App {
+  max-height: 0vh;
+  max-width: 0vw;
+  margin: 0;
+  background-color: #8ae90f;
+}
+.App section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100vw;
+  color: #005fb3;
+}
+.App section h1 {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 5em;
+}
+
+/*# sourceMappingURL=App.css.map */
