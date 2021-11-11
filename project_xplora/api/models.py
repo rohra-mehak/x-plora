@@ -12,6 +12,7 @@ class CUser(models.Model):
       user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user")
       Name_of_Organization = models.CharField( name= "Name_of_Organization" ,max_length=500, blank = True)
       profession =models.CharField(name ="profession", max_length=100 , blank=True)
+
 class Problem(models.Model):
 
  
@@ -25,7 +26,7 @@ Problem/ Data set Description
    title  = models.CharField( max_length =500 ,unique=True)
    dataset_description = models.TextField()
    created_on = models.DateTimeField(auto_now_add=True)
-   dataset_provision_email =  "Please attach your data to - xyz@somemail.com"
+   dataset_provision_email =  "Please attach your data to - xyz@somemail.com"                            
 
 class  Stage(models.Model):
    """  StageID

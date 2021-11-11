@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.urls.base import reverse_lazy
 from .models import Problem , Solution , Stage , CUser
 from django.contrib.auth.models import User
-from .serializers import CUserSerializer, ProblemSerializer, StageSerializer, SolutionSerializer
+from .serializers import CUserSerializer, ProblemSerializer, StageSerializer, SolutionSerializer , UserSerializer
 
 from .forms import SignUpForm, EditProfileForm, PasswordUpdateForm
 # Create your views here.
@@ -24,6 +24,11 @@ class UserRegisterView(generics.CreateAPIView):
     serializer_class = CUserSerializer
     # success_url = reverse_lazy('login')
 
+class GetView(generics.ListAPIView):
+   
+    # API endpoint that allows users to be viewed or edited. 
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 class UserEditView(generic.UpdateView):
     form_class = EditProfileForm

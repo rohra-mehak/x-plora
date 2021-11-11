@@ -89,6 +89,10 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+
+]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
