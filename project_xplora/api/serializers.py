@@ -1,6 +1,12 @@
 from rest_framework import fields, serializers
+from rest_framework.authtoken.views import ObtainAuthToken
 from .models import CUser, Problem, Solution, Stage
 from django.contrib.auth.models import AbstractUser, User
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated , AllowAny
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import permission_classes
 
 class ProblemSerializer(serializers.ModelSerializer):
       class Meta:
@@ -47,5 +53,6 @@ class CUserSerializer(serializers.ModelSerializer):
         cUser, created = CUser.objects.update_or_create(user=user,
                             profession=validated_data.pop('profession') , 
                             Name_of_Organization=validated_data.pop('Name_of_Organization'))
-        return cUser
+        token, created = Token.objects.get_or_create(user=user)
+        return cUser 
     

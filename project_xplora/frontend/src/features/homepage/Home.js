@@ -61,30 +61,25 @@ function Homepage () {
     
     function customFetchPrefix(){
 
-        // axios({
-        //     url : 'http://localhost:8000/register',
-        //     method: 'POST',
-        //     data: {
-        //         "user": {
-        //             "username": "Parmar",
-        //             "first_name": "Jr",
-        //             "last_name": "Sr",
-        //             "email": "JrSr@gmail.com",
-        //             "password": "JrSr"
-        //         },
-        //         "profession": "Proffesor",
-        //         "Name_of_Organization": "Pwr"
-        //     }
+        axios({
+            url : 'http://localhost:8000/token-auth/',
+            method: 'POST',
+            data: {
+                 
+                    "username": "POpe",
+                    "password": "stud123!"
+            }
+        
 
-        // }).then(res => {
-        //     console.log(res);
-        //     dispatch(customPrefix('None'));
-        // });
-        axios.get('http://localhost:8000/users')
-        .then(res=> {
+        }).then(res => {
             console.log(res);
             dispatch(customPrefix('None'));
-        } );
+        });
+        // axios.get('http://localhost:8000/users')
+        // .then(res=> {
+        //     console.log(res);
+        //     dispatch(customPrefix('None'));
+        // } );
     }
 
 
