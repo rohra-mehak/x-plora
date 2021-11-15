@@ -59,28 +59,24 @@ function Homepage () {
     
     function customFetchPrefix(){
         axios({
-            url : 'http://localhost:8000/register',
+            url : 'http://localhost:8000/token-auth/',
             method: 'POST',
             data: {
-                "user": {
-                    "username": "Parmar",
-                    "first_name": "Jr",
-                    "last_name": "Sr",
-                    "email": "JrSr@gmail.com",
-                    "password": "JrSr"
-                },
-                "profession": "Proffesor",
-                "Name_of_Organization": "Pwr"
+                 
+                    "username": "POpe",
+                    "password": "stud123!"
             }
+        
 
         }).then(res => {
             console.log(res);
             dispatch(customPrefix('None'));
         });
-        // axios.get('https://jsonplaceholder.typicode.com/posts')
+        // axios.get('http://localhost:8000/users')
         // .then(res=> {
-        //     dispatch(customPrefix(res.data[0].title))
-        // } )
+        //     console.log(res);
+        //     dispatch(customPrefix('None'));
+        // } );
     }
 
 

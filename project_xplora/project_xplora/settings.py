@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'rest_framework',
+    "rest_framework.authtoken",
     "corsheaders",
 ]
 
@@ -93,6 +94,17 @@ CORS_ALLOWED_ORIGINS = [
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
