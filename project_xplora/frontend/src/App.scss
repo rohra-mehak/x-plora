@@ -11,6 +11,58 @@
     // scroll-snap-type: y mandatory;
     // overflow-y: scroll;
 
+header {
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 50px;
+  z-index: 1000;
+  /* filter: blur(4px); */
+}
+
+header .logo {
+  color: azure;
+  text-decoration: none;
+  font-size: 2em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-radius: 8px;
+}
+
+header .logo:hover {
+  font-size: 2.1em;
+  transition: 0.2s;
+}
+
+header ul {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+header ul li {
+  list-style: none;
+  margin-left: 20px;
+}
+
+header ul li a {
+  text-decoration: none;
+  padding: 6px 6px;
+  color: azure;
+  border-radius: 8px;
+}
+
+header ul li a:hover,
+header ul li a.active {
+  background: azure;
+  color: black;
+  transition: 1s;
+}
+
     section {
       display: flex;
       justify-content: center;

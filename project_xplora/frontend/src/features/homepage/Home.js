@@ -22,7 +22,6 @@ ScrollMagicPluginGsap(ScrollMagic, TweenMax, TimelineMax);
 function Homepage () {
     const prefixFromState = useSelector((state) => state.homePage.prefix );
 
-    console.log(prefixFromState);
     useEffect(() => {
 
     let controller =  new ScrollMagic.Controller();
@@ -33,34 +32,32 @@ function Homepage () {
     // .to('#RFront', 2, {y: -80}, '-=2')
     .to('#LMid', 2, {y: 100}, '-=2')
     .to('#RMid', 2, {y: 100},  '-=2')
-    .to('#back', 2, {y: 220}, '-=2')
+    .to('#back', 2, {y: 180}, '-=2')
 
     .fromTo('#star',3, {y:-200}, {y:300}, '-=2')
 
     .to('#astranaut', 2, {y: -100}, '-=3')
     .to('#text', 1, {opacity: 0}, '-=2')
     .to('#earth', 2, { x: -202, y:-150, rotate: 20}, '-=3')
-    // .to('header',2, { filter: blur('2px') });
-    // .to('#next', 10, {trasnlateY: -100}, '-=2')
-
+    .fromTo('#loader', 2, {opacity: 0, x:-200}, {opacity: 1, x:0}, '-=1')
+    .fromTo('#Content', 2, {opacity: 0}, {opacity: 1}, '-=3')
+    .to('#next', 2, {boxShadow: '0px -20px 60px rgb(155, 2, 134)'},'-=4')
     let scene = new ScrollMagic.Scene({
         triggerElement: "section",
-        duration: "70%",
+        duration: "120%",
         triggerHook: 0,
     })
     .setTween(timeline)
-    .setPin(".main-sec")
+    // .setPin(".main_sec")
     .addTo(controller);
 
 
     // console.log(this.prefixFromState);
     }, [])
    
-    
     const dispatch = useDispatch();
     
     function customFetchPrefix(){
-
         axios({
             url : 'http://localhost:8000/register',
             method: 'POST',
@@ -89,16 +86,7 @@ function Homepage () {
 
     return (
         <div className='container_body'>
-            <header>
-                <a href="." className="logo">X-plora</a>
-                <ul>
-                    <li><a href="." className="active">Home</a></li>
-                    <li><a href="#next">Featues</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href=".">Register</a></li>
-                </ul>
-            </header>
-
+            
             <section className='main_sec'> 
                 <img src={STARS} id='star' alt='.' />
                 <img src={BACK} alt='.' id='back' />
@@ -112,14 +100,40 @@ function Homepage () {
             </section>
 
             <section id='next'>
-                <button onClick={() => dispatch(malePrefix())}>Add Male Prefix</button>
-                <button onClick={() => dispatch(femalePrefix())}>Add Female Prefix</button>
-                <button onClick={customFetchPrefix}>Add custom Prefix</button>
-                <h1> {prefixFromState} Anon </h1>
+                <div id="mainContainer">
+                    <div id='containerOne'>
+                        <div id='loader'>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <h2>1</h2>
+                        </div>
+                        <div id='Content'> Describe your Dataset </div>
+                    </div> 
+                    <div id='containerTwo'>
+                    <div id='loader'>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <h2>2</h2>
+                        </div>
+                        <div id='Content'> Track your EDA </div>
+                    </div> 
+                    <div id='containerThree'>
+                    <div id='loader'>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <h2>3</h2>
+                        </div>
+                        <div id='Content'> Get your Visulizations </div>
+                    </div> 
+                </div>
             </section>
 
-            <section id="contact">
-                <h1>Contact</h1>
+            <section id="Login">
+                <div id="l_container">Login</div>
+                <div id="r_container">Register</div>
             </section>
 
 
