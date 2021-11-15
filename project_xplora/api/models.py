@@ -52,8 +52,8 @@ class  Solution_Stage(models.Model):
    s_number = models.CharField(max_length =30 ,choices= Stage_Number.choices, default=Stage_Number.One)
    # title  = models.CharField(max_length=255)
    # description = models.TextField()
-   state = models.CharField( max_length =6 ,choices= State.choices, default= State.RED )
-   isActivated = models.BooleanField(default=False)
+   state = models.CharField( max_length =6 ,choices= State.choices, default= State.GREEN )
+   isActivated = models.BooleanField(default=True)
    isComplete = models.BooleanField(default=False)
 
 
