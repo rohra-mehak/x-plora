@@ -1,6 +1,6 @@
 from rest_framework import fields, serializers
 from rest_framework.authtoken.views import ObtainAuthToken
-from .models import CUser, Problem, Solution, Stage
+from .models import CUser, Problem, Solution, Solution_Stage
 from django.contrib.auth.models import AbstractUser, User
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -23,9 +23,11 @@ class SolutionSerializer(serializers.ModelSerializer):
 
 
 
-class StageSerializer(serializers.ModelSerializer):
+class Solution_StageSerializer(serializers.ModelSerializer):
+    probelem = serializers.PrimaryKeyRelatedField(many=True, queryset=Problem.objects.all())
+
     class Meta :
-          model = Stage
+          model = Solution_Stage
         #   fields = ('id', 'belongs_to', 'title', 'description', 'state', 'isActivated', 'isComplete')
           fields = "__all__"
 
