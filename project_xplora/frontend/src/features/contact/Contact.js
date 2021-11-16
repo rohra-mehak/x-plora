@@ -1,5 +1,5 @@
 import "./Contact.css";
-import { useEffect } from "react";
+import { useEffect, componentDidMount, componentWillUnmount } from "react";
 import Phone from "./phone.png";
 import Phone2 from "./phone2.png";
 
