@@ -9,10 +9,11 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import permission_classes
 
 class ProblemSerializer(serializers.ModelSerializer):
+      # author = serializers.ReadOnlyField(source='author.username')
       class Meta:
           model = Problem
-        #   fields = ('id', 'author', 'title', 'dataset_description', 'created_on', 'dataset_provision_email')
-          fields = "__all__"
+          fields = ('title', 'dataset_description', 'created_on', 'dataset_provision_email')
+          # fields = "__all__"
 
 
 class SolutionSerializer(serializers.ModelSerializer):
