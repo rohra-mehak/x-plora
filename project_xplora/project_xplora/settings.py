@@ -39,11 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'rest_framework',
-<<<<<<< HEAD
-    "rest_framework.authtoken",
-=======
     'rest_framework.authtoken',
->>>>>>> e45f02d1ead98de226220a2935028b1a6eefeb30
     "corsheaders",
 ]
 
@@ -100,18 +96,6 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-<<<<<<< HEAD
-
-]
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-
-}
-=======
->>>>>>> e45f02d1ead98de226220a2935028b1a6eefeb30
 
 ]
 REST_FRAMEWORK = {

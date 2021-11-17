@@ -1,43 +1,168 @@
-import React from "react";
+/* eslint-disable jsx-a11y/alt-text */
+import React, { useEffect, useRef } from "react";
 import "./Login.css";
+import axios from "axios";
+import STARS from "./stars.png";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 export default function Login() {
-  const [data, setData] = React.useState({});
-  const regExp = RegExp(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/);
+  const [newUserdata, setNewUserData] = React.useState({
+    user: {
+      username: "",
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: "",
+    },
+    profession: "",
+    Name_of_Organization: "",
+  });
 
-  const formValid = ({ isError, ...rest }) => {
-    let isValid = false;
+  const [loginUserData, setLoginUserData] = React.useState({
+    username: "",
+    password: "",
+  });
 
-    Object.values(isError).forEach((val) => {
-      if (val.length > 0) {
-        isValid = false;
-      } else {
-        isValid = true;
-      }
+  // const notificationReference = React.createRef();
+
+  const [notification, setNotification] = React.useState({
+    visible: false,
+    text: "User Created Successfully, Please Login.",
+    type: "",
+  });
+
+  const handleClick = (e) => {
+    if (node.current.contains(e.target)) {
+      // inside click
+      return;
+    }
+
+    setNotification({
+      visible: false,
+      text: "",
+      type: "",
+    });
+  };
+
+  const node = useRef();
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, []);
+
+  const dumpDataCreate = (e) => {
+    e.preventDefault();
+    setNewUserData({
+      user: {
+        username: e.target[0].value,
+        first_name: e.target[1].value,
+        last_name: e.target[2].value,
+        email: e.target[3].value,
+        password: e.target[4].value,
+      },
+      profession: e.target[5].value,
+      Name_of_Organization: e.target[6].value,
     });
 
-    Object.values(rest).forEach((val) => {
-      if (val === null) {
-        isValid = false;
-      } else {
-        isValid = true;
-      }
+    if (true) {
+      console.log(newUserdata);
+      axios({
+        method: "post",
+        url: "http://127.0.0.1:8000/register",
+        data: newUserdata,
+      })
+        .then((e) => {
+          if (e.status === 201) {
+            setNotification({
+              visible: true,
+              text: "User Created Successfully, Please Login.",
+              type: "success",
+            });
+            e.target.reset();
+          }
+        })
+        .catch((err) => {
+          setNotification({
+            visible: true,
+            text: "User not created, Please try again.",
+            type: "failure",
+          });
+        });
+    }
+  };
+
+  const dumpDataLogin = (e) => {
+    e.preventDefault();
+    setLoginUserData({
+      username: e.target[0].value,
+      password: e.target[1].value,
     });
 
-    return isValid;
+    axios({
+      method: "post",
+      url: "http://127.0.0.1:8000/login/",
+      data: loginUserData,
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          //set State
+        } else {
+          setNotification({
+            visible: true,
+            text: "Login Failed, please try again",
+            type: "failure",
+          });
+          //setState
+        }
+      })
+      .catch((err) => {
+        console.log("error:", err);
+      });
   };
 
   return (
     <section id="Login">
-      <div id="main_container">
-        <div id="r_container">
-          <form>
-            <div className="form-group">
-              <label>Name</label>
-              <input type="text" className="form-control" />
-              <small className="text-danger">Name is required.</small>
-            </div>
+      <img src={STARS} id="stars" />
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
+      <span id="shoot"></span>
 
+      <div id="main_container">
+        <div ref={node} className="notification" hidden={!notification.visible}>
+          <h2 id="content_not">{notification.text}</h2>
+        </div>
+        <div id="r_container">
+          <h2> Register</h2>
+
+          <form onSubmit={dumpDataCreate}>
+            <div className="form-group">
+              <label>UserName</label>
+              <input type="text" className="form-control" />
+              {/* <small className="text-danger">Name is required.</small> */}
+            </div>
+            <div className="form-group">
+              <label>First Name</label>
+              <input type="text" className="form-control" />
+              {/* <small className="text-danger">Name is required.</small> */}
+            </div>
+            <div className="form-group">
+              <label>Last Name</label>
+              <input type="text" className="form-control" />
+              {/* <small className="text-danger">Name is required.</small> */}
+            </div>
             <div className="form-group">
               <label>Email</label>
               <input type="email" className="form-control" />
@@ -45,15 +170,48 @@ export default function Login() {
 
             <div className="form-group">
               <label>Password</label>
+              <input type="password" className="form-control" />
+            </div>
+
+            <div className="form-group">
+              <label>Profession</label>
               <input type="text" className="form-control" />
             </div>
 
-            <button type="submit" className="btn btn-block btn-danger">
+            <div className="form-group">
+              <label>Name of Organization</label>
+              <input type="text" className="form-control" />
+            </div>
+            <br></br>
+            <button
+              type="submit"
+              className="btn btn-block btn-danger"
+              // onClick={dumpData}
+            >
               Create User
             </button>
           </form>
         </div>
-        <div id="l_container"></div>
+
+        <div id="l_container">
+          <h2> Login</h2>
+          <form onSubmit={dumpDataLogin}>
+            <div className="form-group">
+              <label>username</label>
+              <input type="text" className="form-control" />
+            </div>
+
+            <div className="form-group">
+              <label>Password</label>
+              <input type="password" className="form-control" />
+            </div>
+
+            <br></br>
+            <button type="submit" className="btn btn-block btn-danger">
+              Login
+            </button>
+          </form>
+        </div>
       </div>
     </section>
   );

@@ -55,7 +55,18 @@ img#RMid {
   height: 100%;
   left: 0%;
   position: absolute;
+  animation: newAniEarth 5s linear infinite;
 }
+
+/* @keyframes newAniEarth {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+} */
 
 #back {
   position: absolute;
@@ -83,6 +94,7 @@ img#RMid {
   background-color: rgb(0, 0, 0);
   position: absolute;
   max-height: 100vh;
+  z-index: 2;
 }
 
 #mainContainer {
