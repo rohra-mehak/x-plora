@@ -3,8 +3,11 @@ import React, { useEffect, useRef } from "react";
 import "./Login.css";
 import axios from "axios";
 import STARS from "./stars.png";
+import { useSelector, useDispatch } from "react-redux";
+import { setUserCredentials, logOutUser } from "./LoginSlicer";
+
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-export default function Login() {
+export default function Login(stat) {
   const [newUserdata, setNewUserData] = React.useState({
     user: {
       username: "",
@@ -21,6 +24,7 @@ export default function Login() {
     username: "",
     password: "",
   });
+
 
   // const notificationReference = React.createRef();
 
@@ -52,6 +56,70 @@ export default function Login() {
     };
   }, []);
 
+  const didMountRef = useRef(false);
+  const didMountRefII = useRef(false);
+const dispatch = useDispatch();
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      console.log("skipp");
+    } else {
+      var datas = { "username": "vish", "password": "pass" };
+      axios({
+        method: "post",
+        url: "http://127.0.0.1:8000/login/",
+        data: datas,
+      })
+        .then((res) => {
+          console.log(this.data)
+          
+            console.log(loginUserData);
+         
+            dispatch(setUserCredentials({username: res.data.username, isAuthorized: true, token: res.data.token}))
+          
+        })
+        .catch((err) => {
+          console.log(datas);
+          console.log("error:", err);
+          setNotification({
+            visible: true,
+            text: "Login Failed, please try again",
+            type: "failure",
+          });
+        });
+    }
+  }, [loginUserData]);
+
+  useEffect(() => {
+    if (!didMountRefII.current) {
+      didMountRefII.current = true;
+      console.log("skippII");
+    } else {
+      console.log(newUserdata);
+      axios({
+        method: "post",
+        url: "http://127.0.0.1:8000/register",
+        data: newUserdata,
+      })
+        .then((e) => {
+          setNotification({
+            visible: true,
+            text: "User Created Successfully, Please Login.",
+            type: "success",
+          });
+          // e.target.reset();
+        })
+        .catch((err) => {
+          console.log(err);
+          setNotification({
+            visible: true,
+            text: "User not created, Please try again. ajaj",
+            type: "failure",
+          });
+        });
+    }
+  }, [newUserdata]);
+
   const dumpDataCreate = (e) => {
     e.preventDefault();
     setNewUserData({
@@ -67,29 +135,29 @@ export default function Login() {
     });
 
     if (true) {
-      console.log(newUserdata);
-      axios({
-        method: "post",
-        url: "http://127.0.0.1:8000/register",
-        data: newUserdata,
-      })
-        .then((e) => {
-          if (e.status === 201) {
-            setNotification({
-              visible: true,
-              text: "User Created Successfully, Please Login.",
-              type: "success",
-            });
-            e.target.reset();
-          }
-        })
-        .catch((err) => {
-          setNotification({
-            visible: true,
-            text: "User not created, Please try again.",
-            type: "failure",
-          });
-        });
+      // console.log(newUserdata);
+      // axios({
+      //   method: "post",
+      //   url: "http://127.0.0.1:8000/register",
+      //   data: newUserdata,
+      // })
+      //   .then((e) => {
+      //     if (e.status === 201) {
+      //       setNotification({
+      //         visible: true,
+      //         text: "User Created Successfully, Please Login.",
+      //         type: "success",
+      //       });
+      //       e.target.reset();
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     setNotification({
+      //       visible: true,
+      //       text: "User not created, Please try again.",
+      //       type: "failure",
+      //     });
+      //   });
     }
   };
 
@@ -100,26 +168,29 @@ export default function Login() {
       password: e.target[1].value,
     });
 
-    axios({
-      method: "post",
-      url: "http://127.0.0.1:8000/login/",
-      data: loginUserData,
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          //set State
-        } else {
-          setNotification({
-            visible: true,
-            text: "Login Failed, please try again",
-            type: "failure",
-          });
-          //setState
-        }
-      })
-      .catch((err) => {
-        console.log("error:", err);
-      });
+    // axios({
+    //   method: "post",
+    //   url: "http://127.0.0.1:8000/login/",
+    //   data: loginUserData,
+    // })
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       //set State
+    //     } else {
+    //       console.log(loginUserData);
+    //       setNotification({
+    //         visible: true,
+    //         text: "Login Failed, please try again",
+    //         type: "failure",
+    //       });
+    //       //setState
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(loginUserData);
+
+    //     console.log("error:", err);
+    //   });
   };
 
   return (
@@ -148,39 +219,39 @@ export default function Login() {
           <h2> Register</h2>
 
           <form onSubmit={dumpDataCreate}>
-            <div className="form-group">
+            <div className="form-group-r">
               <label>UserName</label>
               <input type="text" className="form-control" />
               {/* <small className="text-danger">Name is required.</small> */}
             </div>
-            <div className="form-group">
+            <div className="form-group-r">
               <label>First Name</label>
               <input type="text" className="form-control" />
               {/* <small className="text-danger">Name is required.</small> */}
             </div>
-            <div className="form-group">
+            <div className="form-group-r">
               <label>Last Name</label>
               <input type="text" className="form-control" />
               {/* <small className="text-danger">Name is required.</small> */}
             </div>
-            <div className="form-group">
+            <div className="form-group-r">
               <label>Email</label>
-              <input type="email" className="form-control" />
+              <input type="email" className="form-control-r" />
             </div>
 
-            <div className="form-group">
+            <div className="form-group-r">
               <label>Password</label>
-              <input type="password" className="form-control" />
+              <input type="password" className="form-control-r" />
             </div>
 
-            <div className="form-group">
+            <div className="form-group-r">
               <label>Profession</label>
-              <input type="text" className="form-control" />
+              <input type="text" className="form-control-r" />
             </div>
 
-            <div className="form-group">
+            <div className="form-group-r">
               <label>Name of Organization</label>
-              <input type="text" className="form-control" />
+              <input type="text" className="form-control-r" />
             </div>
             <br></br>
             <button
