@@ -64,7 +64,7 @@ const dispatch = useDispatch();
       didMountRef.current = true;
       console.log("skipp");
     } else {
-      var datas = { "username": "vish", "password": "pass" };
+      var datas = { "username": "sprash", "password": "stud123!" };
       axios({
         method: "post",
         url: "http://127.0.0.1:8000/login/",
@@ -98,7 +98,7 @@ const dispatch = useDispatch();
       console.log(newUserdata);
       axios({
         method: "post",
-        url: "http://127.0.0.1:8000/register",
+        url: "http://127.0.0.1:8000/register/",
         data: newUserdata,
       })
         .then((e) => {

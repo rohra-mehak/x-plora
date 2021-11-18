@@ -82,7 +82,7 @@ class CustomAuthToken(ObtainAuthToken):
   payload = username , password
   response  = token , user email ,username, userid , """
 
-  def post(self, request, *args, **kwargs):
+  def post(self, request, format=None, *args, **kwargs):
       serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
       serializer.is_valid(raise_exception=True)
@@ -305,7 +305,7 @@ class UserLogoutView(generics.ListAPIView):
      response = user logged out successfulyyy """
    
     permission_classes =([IsAuthenticated])
-    def get( self, request, *args, **kwargs):
+    def get( self, request, format=None,  *args, **kwargs):
         request.user.auth_token.delete()
         return Response('User Logged out successfully')
 
