@@ -33,6 +33,8 @@ class TestAuthView(APIView):
     """
     JUST FOR TESTING IF MY TOKEN AUTHENTICATION WORKS AND RETURNS THE USER
     WHEN A GET REQUEST IS MADE WITH AUTHORSATION HEADER FORA REGISTERED USER
+     
+     tests can be written similarly 
 """
 
     authentication_classes = (authentication.TokenAuthentication,)
