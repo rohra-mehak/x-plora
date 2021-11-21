@@ -219,39 +219,39 @@ const dispatch = useDispatch();
           <h2> Register</h2>
 
           <form onSubmit={dumpDataCreate}>
-            <div className="form-group-r">
+            <div className="form-group">
               <label>UserName</label>
               <input type="text" className="form-control" />
               {/* <small className="text-danger">Name is required.</small> */}
             </div>
-            <div className="form-group-r">
+            <div className="form-group">
               <label>First Name</label>
               <input type="text" className="form-control" />
               {/* <small className="text-danger">Name is required.</small> */}
             </div>
-            <div className="form-group-r">
+            <div className="form-group">
               <label>Last Name</label>
               <input type="text" className="form-control" />
               {/* <small className="text-danger">Name is required.</small> */}
             </div>
-            <div className="form-group-r">
+            <div className="form-group">
               <label>Email</label>
-              <input type="email" className="form-control-r" />
+              <input type="email" className="form-control" />
             </div>
 
-            <div className="form-group-r">
+            <div className="form-group">
               <label>Password</label>
-              <input type="password" className="form-control-r" />
+              <input type="password" className="form-control" />
             </div>
 
-            <div className="form-group-r">
+            <div className="form-group">
               <label>Profession</label>
-              <input type="text" className="form-control-r" />
+              <input type="text" className="form-control" />
             </div>
 
-            <div className="form-group-r">
+            <div className="form-group">
               <label>Name of Organization</label>
-              <input type="text" className="form-control-r" />
+              <input type="text" className="form-control" />
             </div>
             <br></br>
             <button
