@@ -25,7 +25,6 @@ export default function Login(stat) {
     password: "",
   });
 
-
   // const notificationReference = React.createRef();
 
   const [notification, setNotification] = React.useState({
@@ -58,7 +57,7 @@ export default function Login(stat) {
 
   const didMountRef = useRef(false);
   const didMountRefII = useRef(false);
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
@@ -76,10 +75,15 @@ const dispatch = useDispatch();
           // console.log("data", this.data)
           console.log("loginuserdata", loginUserData);
           console.log("res", res);
-        
-        
-          dispatch(setUserCredentials({username: res.data.username, isAuthorized: true, token: res.data.token}))
-          
+
+          dispatch(
+            setUserCredentials({
+              username: res.data.username,
+              isAuthorized: true,
+              token: res.data.token,
+            })
+          );
+          console.log("Successful login : ", res);
         })
         .catch((err) => {
           console.log("here in error catched");
@@ -111,6 +115,7 @@ const dispatch = useDispatch();
             text: "User Created Successfully, Please Login.",
             type: "success",
           });
+          console.log("Successful registration : ", e);
           // e.target.reset();
         })
         .catch((err) => {
@@ -137,32 +142,6 @@ const dispatch = useDispatch();
       profession: e.target[5].value,
       Name_of_Organization: e.target[6].value,
     });
-
-    if (true) {
-      // console.log(newUserdata);
-      // axios({
-      //   method: "post",
-      //   url: "http://127.0.0.1:8000/register",
-      //   data: newUserdata,
-      // })
-      //   .then((e) => {
-      //     if (e.status === 201) {
-      //       setNotification({
-      //         visible: true,
-      //         text: "User Created Successfully, Please Login.",
-      //         type: "success",
-      //       });
-      //       e.target.reset();
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     setNotification({
-      //       visible: true,
-      //       text: "User not created, Please try again.",
-      //       type: "failure",
-      //     });
-      //   });
-    }
   };
 
   const dumpDataLogin = (e) => {
