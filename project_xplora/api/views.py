@@ -15,6 +15,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import logout, login
 from rest_framework.permissions import AllowAny
+from django.contrib.auth.signals import user_logged_in
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .serializers import CUserSerializer, ProblemSerializer, Solution_StageSerializer, SolutionSerializer , UserSerializer
@@ -83,16 +84,24 @@ class CustomAuthToken(ObtainAuthToken):
   response  = token , user email ,username, userid , """
 
   def post(self, request, format=None, *args, **kwargs):
+      isFirstVisit = False
+       
       serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
       serializer.is_valid(raise_exception=True)
       user = serializer.validated_data['user']
+      if user.last_login is None: 
+         isFirstVisit = True  
       token, created = Token.objects.get_or_create(user=user)
+      user_logged_in.send(sender=user.__class__, request=request, user=user)
+      print(type(user.last_login))
+        
       return Response({
             'token': token.key,
             'user_id': user.pk,
             'email': user.email,
-            'username' : user.username
+            'username' : user.username,
+            "isFirstVisit" : isFirstVisit
         })
 
 
