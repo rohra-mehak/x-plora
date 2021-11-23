@@ -64,22 +64,26 @@ const dispatch = useDispatch();
       didMountRef.current = true;
       console.log("skipp");
     } else {
-      var datas = { "username": "sprash", "password": "stud123!" };
+      // var datas = { "username": "sprash", "password": "stud123!" };
       axios({
         method: "post",
         url: "http://127.0.0.1:8000/login/",
-        data: datas,
+        data: loginUserData,
       })
         .then((res) => {
-          console.log(this.data)
-          
-            console.log(loginUserData);
-         
-            dispatch(setUserCredentials({username: res.data.username, isAuthorized: true, token: res.data.token}))
+          console.log("here in response block");
+
+          // console.log("data", this.data)
+          console.log("loginuserdata", loginUserData);
+          console.log("res", res);
+        
+        
+          dispatch(setUserCredentials({username: res.data.username, isAuthorized: true, token: res.data.token}))
           
         })
         .catch((err) => {
-          console.log(datas);
+          console.log("here in error catched");
+          console.log(loginUserData);
           console.log("error:", err);
           setNotification({
             visible: true,
@@ -88,7 +92,7 @@ const dispatch = useDispatch();
           });
         });
     }
-  }, [loginUserData]);
+  }, [dispatch, loginUserData]);
 
   useEffect(() => {
     if (!didMountRefII.current) {
@@ -219,39 +223,39 @@ const dispatch = useDispatch();
           <h2> Register</h2>
 
           <form onSubmit={dumpDataCreate}>
-            <div className="form-group-r">
+            <div className="form-group-l">
               <label>UserName</label>
               <input type="text" className="form-control" />
               {/* <small className="text-danger">Name is required.</small> */}
             </div>
-            <div className="form-group-r">
+            <div className="form-group-l">
               <label>First Name</label>
               <input type="text" className="form-control" />
               {/* <small className="text-danger">Name is required.</small> */}
             </div>
-            <div className="form-group-r">
+            <div className="form-group-l">
               <label>Last Name</label>
               <input type="text" className="form-control" />
               {/* <small className="text-danger">Name is required.</small> */}
             </div>
-            <div className="form-group-r">
+            <div className="form-group-l">
               <label>Email</label>
-              <input type="email" className="form-control-r" />
+              <input type="email" className="form-control" />
             </div>
 
-            <div className="form-group-r">
+            <div className="form-group-l">
               <label>Password</label>
-              <input type="password" className="form-control-r" />
+              <input type="password" className="form-control" />
             </div>
 
-            <div className="form-group-r">
+            <div className="form-group-l">
               <label>Profession</label>
-              <input type="text" className="form-control-r" />
+              <input type="text" className="form-control" />
             </div>
 
-            <div className="form-group-r">
+            <div className="form-group-l">
               <label>Name of Organization</label>
-              <input type="text" className="form-control-r" />
+              <input type="text" className="form-control" />
             </div>
             <br></br>
             <button
