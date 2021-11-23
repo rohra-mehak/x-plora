@@ -1,6 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import counterSlice from "../counter/counterSlice";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
+
 
 export const LoginSlicer = createSlice({
   name: "loginState",
@@ -8,6 +7,12 @@ export const LoginSlicer = createSlice({
     username: "",
     token: "",
     isAuthorized: false,
+    problem: {
+      firstVisit: true,
+      problemName: '',
+      description: '',
+      dataTransferType: '',
+    }
   },
   reducers: {
     setUserCredentials: (state, action) => {
@@ -17,13 +22,18 @@ export const LoginSlicer = createSlice({
     },
 
     logOutUser: (state) => {
+      console.log("doe")
       state.isAuthorized = false;
       state.username = "";
       state.token = "";
     },
+
+    updateFirstVisit : (state) => {
+      state.problem.firstVisit = false
+    }
   },
 });
 
-export const { setUserCredentials, logOutUser } = LoginSlicer.actions;
+export const { setUserCredentials, logOutUser, updateFirstVisit } = LoginSlicer.actions;
 
 export default LoginSlicer.reducer;

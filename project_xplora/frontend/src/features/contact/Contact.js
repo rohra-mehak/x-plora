@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import "./Contact.css";
 import { useEffect, componentDidMount, componentWillUnmount } from "react";
 import Phone from "./phone.png";
