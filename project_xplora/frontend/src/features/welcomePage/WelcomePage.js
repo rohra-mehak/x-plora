@@ -4,27 +4,28 @@ import "./WelcomePage.css";
 // import axios from "axios";
 // import STARS from "./stars.png";
 import { useSelector, useDispatch } from "react-redux";
-import { updateFirstVisit } from "../Login/LoginSlicer";
+import { updateProblem } from "../Login/LoginSlicer";
 // import { setUserCredentials, logOutUser } from "./LoginSlicer";
 
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 export default function WelcomePage() {
-  const { firstVisit } = useSelector((state) => state.user.problem);
+  const firstVisit = useSelector((state) => state.user.problem.firstVisit);
   const { token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  const [problem, setProblem] = useState({
-    title: "",
-    dataset_description: "",
-  });
+  const problem = useState(useSelector((state) => state.user.problem));
+
   const submitProblem = (e) => {
     e.preventDefault();
+    // const pr{
+    //   title: e.target[0].value,
+    //   dataset_description: e.target[1].value,
+    //   dataTransferType: 'Drive',
+    //   id: ''
+    // });
 
-    setProblem({
-      title: e.target[0].value,
-      dataset_description: e.target[1].value,
-    });
+    console.log(e.target[0].value, e.target[1].value);
 
     const headers = {
       "Content-Type": "application/json",
@@ -32,16 +33,35 @@ export default function WelcomePage() {
     };
 
     axios
-      .post("http://127.0.0.1:8000/request-a-solution/", problem, {
-        headers: headers,
-      })
+      .post(
+        "http://127.0.0.1:8000/request-a-solution/",
+        {
+          title: e.target[0].value,
+          dataset_description: e.target[1].value,
+        },
+        {
+          headers: headers,
+        }
+      )
       .then((res) => {
         console.log("successfully cerated a problem ", res);
-        dispatch(updateFirstVisit());
+        console.log(
+          "successfully cerated a problem ",
+          res.data.datadescription
+        );
+
+        dispatch(
+          updateProblem({
+            title: res.data.problem_title,
+            description: res.data.datadescription,
+            type: "Via Email",
+            id: res.data.Problem,
+            firstVisit: false,
+          })
+        );
       })
       .catch((err) => {
         console.log(headers);
-
         console.log(err);
       });
   };
@@ -85,7 +105,7 @@ export default function WelcomePage() {
       </div>
     </section>
   ) : (
-    <section className="HomePage">{problem.title}</section>
+    <section className="HomePage">{console.log(problem)}</section>
   );
 }
 
