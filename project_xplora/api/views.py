@@ -329,7 +329,6 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
             # stage.isComplete = False
             # stage.save()
         else : 
-            print("im at else bitch ")
             new_data = {
                 "s_number": s_number,
                  "state"  : state,
@@ -361,7 +360,6 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
                          "Data" : serializer.data
             }
             )
-
 
 
 class GetAndDestroyStagesDetail(mixins.RetrieveModelMixin,
