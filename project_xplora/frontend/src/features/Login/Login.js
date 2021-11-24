@@ -25,7 +25,6 @@ export default function Login(stat) {
     password: "",
   });
 
-
   // const notificationReference = React.createRef();
 
   const [notification, setNotification] = React.useState({
@@ -58,7 +57,7 @@ export default function Login(stat) {
 
   const didMountRef = useRef(false);
   const didMountRefII = useRef(false);
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
@@ -76,10 +75,14 @@ const dispatch = useDispatch();
           // console.log("data", this.data)
           console.log("loginuserdata", loginUserData);
           console.log("res", res);
-        
-        
-          dispatch(setUserCredentials({username: res.data.username, isAuthorized: true, token: res.data.token}))
-          
+          dispatch(
+            setUserCredentials({
+              username: res.data.username,
+              isAuthorized: true,
+              token: res.data.token,
+              isFirstVisit: res.data.isFirstVisit,
+            })
+          );
         })
         .catch((err) => {
           console.log("here in error catched");
