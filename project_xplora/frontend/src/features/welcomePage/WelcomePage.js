@@ -14,6 +14,16 @@ export default function WelcomePage() {
   const { token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
+  /**
+   * initial state
+   * problem: {
+      firstVisit: true,
+      problemName: "",
+      description: "",
+      dataTransferType: "",
+      id: "",
+    },
+   */
   const problem = useState(useSelector((state) => state.user.problem));
 
   const submitProblem = (e) => {
@@ -44,11 +54,7 @@ export default function WelcomePage() {
         }
       )
       .then((res) => {
-        console.log("successfully cerated a problem ", res);
-        console.log(
-          "successfully cerated a problem ",
-          res.data.datadescription
-        );
+        console.log(res.data["Problem "]);
 
         dispatch(
           updateProblem({
@@ -66,7 +72,7 @@ export default function WelcomePage() {
       });
   };
 
-  return firstVisit ? (
+  return !firstVisit ? (
     <section className="HomePage_PromptData">
       {/* <div className="main_container_earth">
                 <div className="DataForm">
