@@ -282,8 +282,8 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
         
         state = deserializer.data['state'] 
         
-        print(s_number)
-        print(stage.s_number)
+        # print(s_number)
+        # print(stage.s_number)
         if s_number == 5:
             print(s_number , "is the stage number , its 5 ")
             if isComplete == True:
@@ -293,6 +293,9 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
                  "isActivated" : False,
                  "isComplete"  : True   
                 }
+            for key , value in new_data.items():
+                setattr(stage , key, value)
+            stage.save()
             return Response({"text" : "This the last stage, stage is complete, problem must be finished  ", 
                             "Data" : new_data
             }
@@ -300,13 +303,24 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
        
         if  isComplete == True:
             print("im here updating data")
+            if s_number != stage.s_number :
+               return Response({"text" : "User is at stage {0}   . Please check the current stage number , Increment to this is not possible ".format(stage.s_number), 
+                                        }
+            )
+            
             new_data = {"s_number": s_number + 1,
                  "state"  : "RED",
                  "isActivated" : True,
                  "isComplete"  : False          
                  }
+            for key , value in new_data.items():
+                setattr(stage , key, value)
+            stage.save()
+            # stage.update_or_create(s_number = new_data['s_number'] , state= new_data['state'], 
+            # isActivated = new_data['isActivated'] , isComplete = new_data['isComplete'])
             return Response({"text" : "you have moved to the next stage   ", 
                             "Data" : new_data
+
             }
             )
             # stage.s_number = int(request.data.get("s_number")) + 1
@@ -329,6 +343,8 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
         serializer = Solution_StageSerializer(stage, data=new_data)
         serializer.is_valid(raise_exception=True )
         self.perform_update(serializer)
+        serializer.save()
+
         # serializer.save()
         # print( " before update " , serializer.data)
         # s_number = serializer.data['s_number']
