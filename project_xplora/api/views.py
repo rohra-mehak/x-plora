@@ -158,17 +158,17 @@ class CreateProblemView(generics.ListCreateAPIView):
             
         return Response(
                 {
-            "user  ":             user.username,
-            'email  ':            user.email ,     
-            'Problem  ':          problem.pk,
-            'problem_title   ':   problem.title,
-            'datadescription   ': problem.dataset_description,
-            'problem_date   ':    problem.created_on,
-            "stage_pk  "     :    stage.pk,
-            's_number  ' :        stage.s_number,
-            "state   " :          stage.state,
-            "isActivated  "  :    stage.isActivated,
-            "isComplete   "  :    stage.isComplete,
+            "user":             user.username,
+            'email':            user.email ,     
+            'Problem':          problem.pk,
+            'problem_title':   problem.title,
+            'datadescription': problem.dataset_description,
+            'problem_date':    problem.created_on,
+            "stage_pk"     :    stage.pk,
+            's_number' :        stage.s_number,
+            "state" :          stage.state,
+            "isActivated"  :    stage.isActivated,
+            "isComplete"  :    stage.isComplete,
             "solution_link"   :   solution.solution_link
 
             },)
