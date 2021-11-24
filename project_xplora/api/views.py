@@ -225,7 +225,7 @@ class ProblemDetail(mixins.RetrieveModelMixin,
 
 
 
-class SolutionStageview(generics.UpdateAPIView):
+class SolutionStageUpdateview(generics.UpdateAPIView):
 
     
     authentication_classes = [TokenAuthentication]
@@ -236,11 +236,11 @@ class SolutionStageview(generics.UpdateAPIView):
     """ 
      will update the the stage details with specified id , eg 
 
-    put http://127.0.0.1:8000/stage-detail/<int:pk>/
+    put http://127.0.0.1:8000/stage-detail/update/<int:pk>/
     #<int:pk> is nothing but the id of the stage you want to update, url to be sent like this -
     eg :
      url example 
-    put http://127.0.0.1:8000/stage-detail/3/ 
+    put http://127.0.0.1:8000/stage-detail/update/3/ 
 
     the stage id is given to you in reponse  when problem is created 
 
@@ -348,6 +348,36 @@ class SolutionStageview(generics.UpdateAPIView):
 
 
 
+class GetAndDestroyStagesDetail(mixins.RetrieveModelMixin,
+                    
+                    mixins.DestroyModelMixin,
+                    generics.GenericAPIView):
+    
+    queryset = Problem.objects.all()
+    serializer_class = ProblemSerializer
+    permission_classes = [IsAuthenticated]
+    
+    #you will need authorisation header :token for all methods below
+
+    """ request_method = get
+    request url = http://127.0.0.1:8000/stage-detail/<int:pk>/
+
+    will return  details of the stage with specified id  as response
+    i.e  s_number, state, isComplete, isActivated etc
+    """
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    
+    """ will remove the specific stage record  and its related recors from the db
+        delete http://127.0.0.1:8000/stage-detail/<int:pk>/
+
+        eg delete http://127.0.0.1:8000/stage-detail/3/
+
+    """
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
 
 class UserDetail(mixins.RetrieveModelMixin,
                     mixins.UpdateModelMixin,
@@ -404,9 +434,6 @@ class GetView(generics.ListAPIView):
 
     queryset = CUser.objects.all()
     serializer_class = CUserSerializer
-
-
-
 
 
 class UserLogoutView(generics.ListAPIView):
