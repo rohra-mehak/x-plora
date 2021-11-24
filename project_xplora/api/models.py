@@ -72,29 +72,34 @@ class  Solution_Stage(models.Model):
        return self.stage_number[index]
    
    @classmethod
-   def increment_stage_and_update(self , isCompleted):
-          if self.s_number == 5:
-             print("Last stage complete , problem is finished")
-             return
+   def increment_stage_and_update(self , isCompleted , stage_number):
+          if stage_number == 5:
+             if isCompleted == True:
+                 print("Last stage complete , problem is finished")
+                 return {
+                        self.isComplete : True,
+                        self.s_number : stage_number  ,
+                        self.isActivated  : False, 
+                        self.state : "GREEN"
+             }
           if isCompleted == True:
-             self.s_number = self.s_number+1
-             self.state = "RED"
-             self.isActivated = True
-             self.isComplete = False
-             self.save()
-          else:
-             print("stage not complete, cannot update")
+             ("im here perofrming update")
+             return {
+             self.isComplete : False , 
+             self.s_number : stage_number +1  ,
+             self.isActivated  : True, 
+             self.state : "RED"
+          }
+          else :
+             return {
+                self.isComplete : isCompleted,
+                self.s_number : stage_number,
+             }
+
+          
              
-   
-        
-         
-      
-
-
-
-
    belongs_to = models.OneToOneField(Problem, on_delete=models.CASCADE)
-   s_number = models.PositiveSmallIntegerField( choices=stage_number, default= 1)
+   s_number = models.IntegerField( choices=stage_number, default= 1)
    state = models.CharField( max_length =6 ,choices= state_list, default= GREEN )
    isActivated = models.BooleanField(default=True)
    isComplete = models.BooleanField(default=False)

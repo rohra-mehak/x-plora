@@ -26,18 +26,18 @@ class SolutionSerializer(serializers.ModelSerializer):
 
 
 class Solution_StageSerializer(serializers.ModelSerializer):
-    probelem = serializers.PrimaryKeyRelatedField(many=True, queryset=Problem.objects.all())
+    # belongs_to = serializers.PrimaryKeyRelatedField( queryset=Problem.objects.all())
 
     class Meta :
           model = Solution_Stage
-        #   fields = ('id', 'belongs_to', 'title', 'description', 'state', 'isActivated', 'isComplete')
-          fields = "__all__"
+          fields = ( 's_number', 'state', 'isActivated', 'isComplete')
+        #   fields = "__all__"
 
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True,
                                      style={'input_type': 'password'})
-                                     
+
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email' , 'password')
