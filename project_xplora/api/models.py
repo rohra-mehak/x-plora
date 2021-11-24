@@ -1,9 +1,11 @@
 from enum import auto
+from functools import reduce
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.enums import Choices
 from django.urls import reverse
 from datetime import datetime, date
+from enum import Enum
 
 # Create your models here.
 
@@ -34,32 +36,73 @@ class  Solution_Stage(models.Model):
     isActivated  boolean 
     isComplete boolean  """
 
-   class State(models.TextChoices):
-        RED =  "RED" ,
-        YELLOW = "YELLOW",
-        GREEN = "GREEN"
+   # class State(models.TextChoices):
+   RED =  'RED' 
+   YELLOW = 'YELLOW'
+   GREEN = 'GREEN'
    
-   class Stage_Number(models.TextChoices):
-       One ="One",
-       Two ="2_Data_Cleaning",
-       Three = "3",
-       Four ="4",
-       Five = "5",
-       Six = "6"
+   state_list = [
+       ( RED ,('red')), 
+       ( YELLOW, ('yellow')),
+       ( GREEN, ('green')),
+   ]
+   # class Stage_Number(models.TextChoices):
+   #     One ="1. Data Acuisition",
+   #     Two ="2. Data Cleaning and Reorganisation",
+   #     Three = "3. Data visualization and initial feature assessment",
+   #     Four =" 4. Data Modelling",
+   #     Five = "5. Results and Conclusions"
+   
+   One =   1
+   Two =   2
+   Three = 3
+   Four =  4
+   Five =  5
+
+   stage_number = [       
+      ( One ,('1. Data Acquisition')),
+      ( Two ,('2. Data Cleaning and Reorganisation')),
+      (  Three , ('3. Data visualization and initial feature assessment')),
+      (  Four , ('4. Data Modelling')),
+      ( Five , ('5. Results and Conclusions'))
+   ]
+
+   @classmethod
+   def get_stage_number(self, index):
+       return self.stage_number[index]
+   
+   @classmethod
+   def increment_stage_and_update(self , isCompleted):
+          if self.s_number == 5:
+             print("Last stage complete , problem is finished")
+             return
+          if isCompleted == True:
+             self.s_number = self.s_number+1
+             self.state = "RED"
+             self.isActivated = True
+             self.isComplete = False
+             self.save()
+          else:
+             print("stage not complete, cannot update")
+             
+   
+        
+         
+      
+
+
 
 
    belongs_to = models.OneToOneField(Problem, on_delete=models.CASCADE)
-   s_number = models.CharField(max_length =30 ,choices= Stage_Number.choices, default=Stage_Number.One)
-   # title  = models.CharField(max_length=255)
-   # description = models.TextField()
-   state = models.CharField( max_length =6 ,choices= State.choices, default= State.GREEN )
+   s_number = models.PositiveSmallIntegerField( choices=stage_number, default= 1)
+   state = models.CharField( max_length =6 ,choices= state_list, default= GREEN )
    isActivated = models.BooleanField(default=True)
    isComplete = models.BooleanField(default=False)
 
 
 class Solution(models.Model):
       solution_to =  models.OneToOneField(Problem, on_delete=models.CASCADE)
-      solution_link = models.URLField(default="", unique=True)
+      solution_link = models.URLField(default="https://docs.google.com/document/d/1ZVbLLNmL3h5gdxOO1oTnSguBiw37y0KTnOfRvNyLRx8/edit?usp=sharing")
 
 
 

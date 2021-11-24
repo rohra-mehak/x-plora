@@ -149,6 +149,7 @@ class CreateProblemView(generics.ListCreateAPIView):
                                                            dataset_description= request.data['dataset_description']
                                                            )                                  
         stage, createdd = Solution_Stage.objects.update_or_create(belongs_to = problem)
+        solution , done = Solution.objects.update_or_create(solution_to = problem)
         serializer = ProblemSerializer(problem, data=request.data, context={'request': request})
         
         
@@ -167,7 +168,8 @@ class CreateProblemView(generics.ListCreateAPIView):
             'stage_number  ' :    stage.s_number,
             "stage_state   " :    stage.state,
             "isActivated  "  :    stage.isActivated,
-            "isComplete   "  :    stage.isComplete
+            "isComplete   "  :    stage.isComplete,
+            "solution_url"   :    solution.solution_link
 
             },)
         # else:
@@ -220,10 +222,12 @@ class ProblemDetail(mixins.RetrieveModelMixin,
     
 
 
-#THIS is yet to be discussed if we take the approach of the dynamic model 
-# not to be tested yet or dealt with yet. 
+
+
+
 class SolutionStageview(generics.UpdateAPIView):
 
+    
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Solution_Stage.objects.all()
@@ -235,11 +239,12 @@ class SolutionStageview(generics.UpdateAPIView):
         stage.isActivated = request.data.get("isActivated")
         stage.state = request.data.get("state")
         stage.isComplete = request.data.get("isComplete")
-       
-        stage.save()
+        isComplete = request.data.get("isComplete")
         serializer = self.get_serializer(stage)
         serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+        print(serializer.data)
+        self.increment_stage_and_update(stage, isComplete )
+        # self.perform_update(serializer)
         return Response(serializer.data)
 
 

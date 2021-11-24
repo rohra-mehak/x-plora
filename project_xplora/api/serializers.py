@@ -35,9 +35,14 @@ class Solution_StageSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True,
+                                     style={'input_type': 'password'})
+                                     
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email' , 'password')
+
+        
 
 class CUserSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
@@ -53,7 +58,10 @@ class CUserSerializer(serializers.ModelSerializer):
         :return: returns a successfully created custom user record
         """
         user_data = validated_data.pop('user')
+        # print(user_data['password'])
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
+        user.set_password(user_data['password'])
+        user.save()
         cUser, created = CUser.objects.update_or_create(user=user,
                             profession=validated_data.pop('profession') , 
                             Name_of_Organization=validated_data.pop('Name_of_Organization'))
