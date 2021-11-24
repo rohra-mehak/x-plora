@@ -99,6 +99,7 @@ class CustomAuthToken(ObtainAuthToken):
       problems = Problem.objects.filter(author=user)
       problem_list = [[problem.pk for problem in problems] if len(problems) != 0 else 0 ]
       
+    
       return Response({
             'token': token.key,
             'user_id': user.pk,
@@ -225,8 +226,6 @@ class ProblemDetail(mixins.RetrieveModelMixin,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
     
-
-
 
 
 

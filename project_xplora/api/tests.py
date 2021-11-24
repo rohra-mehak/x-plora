@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from project_xplora.api.models import CUser
+from .views import SolutionStageUpdateview 
 
 
 """ write your test cases here @ania
@@ -18,6 +19,7 @@ https://tech.people-doc.com/django-unit-test-your-views.html
 https://code.djangoproject.com/ticket/20456#:~:text=When%20django%20users%20create%20class-based%20views%2C%20they%20create,class-based%20views%20is%20using%20the%20builtin%20test%20client.
 # Create your tests here. """
 
-def print():
-    print(CUser.objects.all())
+
+# def print():
+#     print(CUser.objects.all())
 

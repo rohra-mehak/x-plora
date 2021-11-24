@@ -16,7 +16,7 @@ urlpatterns = [
     path('test-auth/', TestAuthView.as_view()),
     path('request-a-solution/', CreateProblemView.as_view()),
     path('register/', UserRegisterView.as_view()), 
-    path('prob-detail<int:pk>',ProblemDetail.as_view() ),
+    path('prob-detail/<int:pk>/',ProblemDetail.as_view() ),
     path('user-detail/<int:pk>/', UserDetail.as_view()),
     path('stage-detail/update/<int:pk>/', SolutionStageUpdateview.as_view()),
     path('stage-detail/<int:pk>/', GetAndDestroyStagesDetail.as_view()),
