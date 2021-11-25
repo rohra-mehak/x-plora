@@ -24,7 +24,16 @@ export default function WelcomePage() {
       id: "",
     },
    */
-  const problem = useState(useSelector((state) => state.user.problem));
+
+  // async function fetchUser() {
+  //   const url = `http://127.0.0.1:8000/prob-detail/${ useSelector(state => { return state.user.problemId})}/`
+  //   let response = await axios.get(url);
+  //   return response.data;
+  // }
+
+  let problem = useSelector((state) => state.user.problem);
+
+  console.log("please check: ", problem);
 
   const submitProblem = (e) => {
     e.preventDefault();
@@ -65,6 +74,8 @@ export default function WelcomePage() {
             firstVisit: false,
           })
         );
+
+        updateProblem();
       })
       .catch((err) => {
         console.log(headers);
@@ -72,7 +83,7 @@ export default function WelcomePage() {
       });
   };
 
-  return !firstVisit ? (
+  return firstVisit ? (
     <section className="HomePage_PromptData">
       {/* <div className="main_container_earth">
                 <div className="DataForm">
@@ -111,7 +122,12 @@ export default function WelcomePage() {
       </div>
     </section>
   ) : (
-    <section className="HomePage">{console.log(problem)}</section>
+    <section className="HomePage">
+      <h1>{console.log("problem", problem)}</h1>
+      <h1> title: {problem.firstVisit}</h1>
+      <h1> title: {problem.description}</h1>
+      <h1> title: {problem.dataTransferType}</h1>
+    </section>
   );
 }
 

@@ -4,7 +4,7 @@ import "./Login.css";
 import axios from "axios";
 import STARS from "./stars.png";
 import { useSelector, useDispatch } from "react-redux";
-import { setUserCredentials, logOutUser } from "./LoginSlicer";
+import { setUserCredentials, logOutUser, updateProblem } from "./LoginSlicer";
 
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 export default function Login(stat) {
@@ -73,16 +73,43 @@ export default function Login(stat) {
           console.log("here in response block");
 
           // console.log("data", this.data)
-          console.log("loginuserdata", loginUserData);
-          console.log("res", res);
+          const problemkey = res.data.problem_Ids[0][0];
+
           dispatch(
             setUserCredentials({
               username: res.data.username,
               isAuthorized: true,
               token: res.data.token,
               isFirstVisit: res.data.isFirstVisit,
+              problemId: res.data.problem_Ids[0][0],
             })
           );
+
+          if (problemkey !== -1) {
+            const headers = {
+              Authorization: `token ${res.data.token}`,
+            };
+
+            console.log(headers);
+
+            axios({
+              method: "get",
+              url: `http://127.0.0.1:8000/prob-detail/${problemkey}/`,
+              headers: headers,
+            }).then((res) => {
+              dispatch(
+                updateProblem({
+                  title: res.data.title,
+                  description: res.data.dataset_description,
+                  type: "Via Email",
+                  id: problemkey,
+                  firstVisit: false,
+                })
+              );
+
+              console.log("we got problem description: ", res);
+            });
+          }
         })
         .catch((err) => {
           console.log("here in error catched");

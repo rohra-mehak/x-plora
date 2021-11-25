@@ -6,12 +6,13 @@ export const LoginSlicer = createSlice({
     username: "",
     token: "",
     isAuthorized: false,
+    problemId: -1,
     problem: {
       firstVisit: true,
       problemName: "",
       description: "",
       dataTransferType: "",
-      id: "",
+      // id: "",
     },
   },
   reducers: {
@@ -20,10 +21,11 @@ export const LoginSlicer = createSlice({
       state.username = action.payload.username;
       state.token = action.payload.token;
       state.problem.firstVisit = action.payload.isFirstVisit;
+      state.problemId = action.payload.problem;
     },
 
     logOutUser: (state) => {
-      console.log("doe");
+      console.log("loggin out");
       state.isAuthorized = false;
       state.username = "";
       state.token = "";
@@ -33,7 +35,7 @@ export const LoginSlicer = createSlice({
       state.problem.problemName = action.payload.title;
       state.problem.description = action.payload.description;
       state.problem.dataTransferType = action.payload.type;
-      state.problem.id = action.payload.id;
+      state.problemId = action.payload.id;
       state.problem.firstVisit = action.payload.firstVisit;
     },
   },
