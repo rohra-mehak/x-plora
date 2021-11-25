@@ -83,8 +83,10 @@ class CustomAuthToken(ObtainAuthToken):
   payload = username , password
   response  = token , user email ,username, userid , """
 
+
   def post(self, request, format=None, *args, **kwargs):
       isFirstVisit = False
+      isProblemCreated = False
        
       serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
@@ -97,16 +99,31 @@ class CustomAuthToken(ObtainAuthToken):
       print(type(user.last_login))
       
       problems = Problem.objects.filter(author=user)
-      problem_list = [[problem.pk for problem in problems] if len(problems) != 0 else 0 ]
+
+    #   stage = Solution_Stage.objects.filter(belongs_to = problems)
+
+      if len(problems) != 0:
+         isProblemCreated = True
+         problem_list = [(problem.pk , problem.title, problem.dataset_description) for problem in problems ]
+         stages_of_problems = []
+         for problem in problem_list:
+             stage = Solution_Stage.objects.filter(belongs_to = problem).first()
+             stages_of_problems.append([ stage.pk , stage.state , stage.s_number , stage.isActivated , stage.isComplete])   
+      else :
+          problem_list = []
+
       
-    
+     #if user logs in , 
       return Response({
             'token': token.key,
             'user_id': user.pk,
             'email': user.email,
             'username' : user.username,
             "isFirstVisit" : isFirstVisit,
-            "problem_Ids" : problem_list
+            "doesUserHaveProblems" : isProblemCreated,
+            "problem_list" :  {
+                    "complete_details" : [problem_list , stages_of_problems]
+            }
 
         })
 
@@ -289,7 +306,7 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
         # print(s_number)
         # print(stage.s_number)
         if s_number == 5:
-            print(s_number , "is the stage number , its 5 ")
+            # print(s_number , "is the stage number , its 5 ")
             if isComplete == True:
                 new_data= {
                  "s_number": s_number,
