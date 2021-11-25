@@ -7,22 +7,33 @@ from rest_framework import authentication
 from rest_framework import permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.views import APIView
-from .models import Problem , Solution, Solution_Stage  , CUser
+from .models import Problem, Solution, Solution_Stage, CUser
 from django.contrib.auth.models import User
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated , AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import logout, login
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.signals import user_logged_in
 
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from .serializers import CUserSerializer, ProblemSerializer, Solution_StageSerializer, SolutionSerializer , UserSerializer
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
+from .serializers import (
+    CUserSerializer,
+    ProblemSerializer,
+    Solution_StageSerializer,
+    SolutionSerializer,
+    UserSerializer,
+)
+
 # Create your views here.
 
-#you will need authorisation header with token for all authenticated views 
-# EXAMPLE 
+# you will need authorisation header with token for all authenticated views
+# EXAMPLE
 # "http://127.0.0.1:8000/request-a-solution/" ,  headers={"Authorization":'token {}'.format(9246932649DKWBCDIFCB12WKLSNJEDBNEF3)} ,
 
 
@@ -34,9 +45,8 @@ class TestAuthView(APIView):
     """
     JUST FOR TESTING IF MY TOKEN AUTHENTICATION WORKS AND RETURNS THE USER
     WHEN A GET REQUEST IS MADE WITH AUTHORSATION HEADER FORA REGISTERED USER
-     
-     tests can be written similarly 
-"""
+
+     tests can be written similarly"""
 
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
@@ -44,19 +54,20 @@ class TestAuthView(APIView):
     def get(self, request, format=None):
         return Response("Hello {0}!".format(request.user))
 
+
 class UserRegisterView(generics.CreateAPIView):
-    
+
     queryset = CUser.objects.all()
     serializer_class = CUserSerializer
     permission_classes = [AllowAny]
 
     # request_method = post
     # request url = http://127.0.0.1:8000/register/
-    # payload = 
+    # payload =
     # username, first_name , last_name , email , password, Profession , Name_Of_Organization
-    # response = 
+    # response =
     #         "user  ":             user.username,
-    #         'email  ':            user.email ,     
+    #         'email  ':            user.email ,
     #         'Problem  ':          problem.pk,
     #         'problem_title   ':   problem.title,
     #         'datadescription   ': problem.dataset_description,
@@ -65,15 +76,15 @@ class UserRegisterView(generics.CreateAPIView):
     #         'stage_number  ' :    stage.s_number,
     #         "stage_state   " :    stage.state,
     #         "isActivated  "  :    stage.isActivated,
-    #         "isComplete   "  :    stage.isComplete 
+    #         "isComplete   "  :    stage.isComplete
     # """
 
 
 class CustomAuthToken(ObtainAuthToken):
 
-  permission_classes = [AllowAny]
+    permission_classes = [AllowAny]
 
-  """ 
+    """ 
    Our LOGIN class with right username and password it fetches the token 
   for the user if it exists in the database and if not TokenAuthenticationg enerates the token 
   for the user provided the username and password  are correct
@@ -83,53 +94,86 @@ class CustomAuthToken(ObtainAuthToken):
   payload = username , password
   response  = token , user email ,username, userid , """
 
-  def post(self, request, format=None, *args, **kwargs):
-      isFirstVisit = False
-       
-      serializer = self.serializer_class(data=request.data,
-                                           context={'request': request})
-      serializer.is_valid(raise_exception=True)
-      user = serializer.validated_data['user']
-      if user.last_login is None: 
-         isFirstVisit = True  
-      token, created = Token.objects.get_or_create(user=user)
-      user_logged_in.send(sender=user.__class__, request=request, user=user)
-      print(type(user.last_login))
-      
-      problems = Problem.objects.filter(author=user)
-      problem_list = [[problem.pk for problem in problems] if len(problems) != 0 else 0 ]
-      
-    
-      return Response({
-            'token': token.key,
-            'user_id': user.pk,
-            'email': user.email,
-            'username' : user.username,
-            "isFirstVisit" : isFirstVisit,
-            "problem_Ids" : problem_list
+    def post(self, request, format=None, *args, **kwargs):
+        isFirstVisit = False
 
-        })
+        areProblemsCreated = False
+
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+
+        if user.last_login is None:
+            isFirstVisit = True
+
+        token, created = Token.objects.get_or_create(user=user)
+
+        user_logged_in.send(sender=user.__class__, request=request, user=user)
+
+        problems = list(Problem.objects.filter(author=user))
+
+        problem_list = []
+        if len(problems) != 0:
+            areProblemsCreated = True
+            for problem in problems:
+
+                stage = Solution_Stage.objects.filter(belongs_to=problem).first()
+
+                problem_list.append(
+                    {
+                        "problem.pk": problem.pk,
+                        "problem.title": problem.title,
+                        "problem.dataset_description": problem.dataset_description,
+                        "problem_stage_data":
+                         {
+                            "stage.pk": stage.pk,
+                            "state": stage.state,
+                            "s_number": stage.s_number,
+                            "isActivated": stage.isActivated,
+                            "isComplete": stage.isComplete,
+                        },
+
+                    }
+                )
+            print(problem_list)
+        else:
+            problem_list = []
+
+       
+        return Response(
+            {
+                "token": token.key,
+                "user_id": user.pk,
+                "email": user.email,
+                "username": user.username,
+                "isFirstVisit": isFirstVisit,
+                "areProblemsCreated": areProblemsCreated,
+                "problem_list": problem_list,
+            }
+        )
 
 
 class CreateProblemView(generics.ListCreateAPIView):
 
-    """ 
-    the post method inside this class creates a problem object in the database 
-    and automatically generates the first stage data for the user when he 
-    provides the title and the dataset description of the problem . 
-    the front sends a post request . 
-    
+    """
+    the post method inside this class creates a problem object in the database
+    and automatically generates the first stage data for the user when he
+    provides the title and the dataset description of the problem .
+    the front sends a post request .
+
     eg :
-    requests.get("http://127.0.0.1:8000/request-a-solution/" ,  
+    requests.get("http://127.0.0.1:8000/request-a-solution/" ,
     headers={"Authorization":'token {}'.format(dcbfiewbfiewg485y932y439r)}
     data = {title: " " . dataset_description : " "})
 
     request_method = post
     request url = http://127.0.0.1:8000/request-a-solution/
     payload = title , dataset_description
-    response = 
+    response =
      "user  ":                    user.username,
-            'email  ':            user.email ,     
+            'email  ':            user.email ,
             'Problem  ':          problem.pk,
             'problem_title   ':   problem.title,
             'datadescription   ': problem.dataset_description,
@@ -138,60 +182,63 @@ class CreateProblemView(generics.ListCreateAPIView):
             'stage_number  ' :    stage.s_number,
             "stage_state   " :    stage.state,
             "isActivated  "  :    stage.isActivated,
-            "isComplete   "  :    stage.isComplete 
+            "isComplete   "  :    stage.isComplete
     """
 
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Problem.objects.all()
     serializer_class = ProblemSerializer
-    
-    
+
     def post(self, request, *args, **kwargs):
         user = User.objects.get(username=request.user.username)
-       
-        problem, created = Problem.objects.update_or_create(author = user,
-                                                           title= request.data['title'],
-                                                           dataset_description= request.data['dataset_description']
-                                                           )                                  
-        stage, createdd = Solution_Stage.objects.update_or_create(belongs_to = problem)
-        solution , done = Solution.objects.update_or_create(solution_to = problem)
-        serializer = ProblemSerializer(problem, data=request.data, context={'request': request})
-        
-        
-        if serializer.is_valid():
-           serializer.save()
-            
-        return Response(
-                {
-            "user":             user.username,
-            'email':            user.email ,     
-            'Problem':          problem.pk,
-            'problem_title':   problem.title,
-            'datadescription': problem.dataset_description,
-            'problem_date':    problem.created_on,
-            "stage_pk"     :    stage.pk,
-            's_number' :        stage.s_number,
-            "state" :          stage.state,
-            "isActivated"  :    stage.isActivated,
-            "isComplete"  :    stage.isComplete,
-            "solution_link"   :   solution.solution_link
 
-            },)
+        problem, created = Problem.objects.update_or_create(
+            author=user,
+            title=request.data["title"],
+            dataset_description=request.data["dataset_description"],
+        )
+        stage, createdd = Solution_Stage.objects.update_or_create(belongs_to=problem)
+        solution, done = Solution.objects.update_or_create(solution_to=problem)
+        serializer = ProblemSerializer(
+            problem, data=request.data, context={"request": request}
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+
+        return Response(
+            {
+                "user": user.username,
+                "email": user.email,
+                "Problem": problem.pk,
+                "problem_title": problem.title,
+                "datadescription": problem.dataset_description,
+                "problem_date": problem.created_on,
+                "stage_pk": stage.pk,
+                "s_number": stage.s_number,
+                "state": stage.state,
+                "isActivated": stage.isActivated,
+                "isComplete": stage.isComplete,
+                "solution_link": solution.solution_link,
+            },
+        )
         # else:
         #     return Response(serializer.data, status.HTTP_200_OK)
 
 
-class ProblemDetail(mixins.RetrieveModelMixin,
-                    mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin,
-                    generics.GenericAPIView):
-    
+class ProblemDetail(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView,
+):
+
     queryset = Problem.objects.all()
     serializer_class = ProblemSerializer
     permission_classes = [IsAuthenticated]
-    
-    #you will need authorisation header :token for all methods below
+
+    # you will need authorisation header :token for all methods below
 
     """ request_method = get
     request url = http://127.0.0.1:8000/prob-detail/<int:pk>/
@@ -202,7 +249,6 @@ class ProblemDetail(mixins.RetrieveModelMixin,
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
-    
 
     """ request_method = put
     request url = http://127.0.0.1:8000/prob-detail/<int:pk>/
@@ -223,15 +269,13 @@ class ProblemDetail(mixins.RetrieveModelMixin,
         eg delete http://127.0.0.1:8000/prob-detail/3/
 
     """
+
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
-    
-
 
 
 class SolutionStageUpdateview(generics.UpdateAPIView):
 
-    
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Solution_Stage.objects.all()
@@ -267,84 +311,89 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
      if will not increment but just change the isActivated to false 
      and return appropriate reponse
       """
-    
 
-    def update(self , request , pk,  *args, **kwargs):
+    def update(self, request, pk, *args, **kwargs):
         stage = Solution_Stage.objects.get(pk=pk)
         # stage.isActivated = request.data.get("isActivated")
         # stage.state = request.data.get("state")
         # isComplete = request.data.get("isComplete")
-        
+
         # print(type(isComplete))
-        
-        deserializer = Solution_StageSerializer(data=request.data ,context={'request': request})
+
+        deserializer = Solution_StageSerializer(
+            data=request.data, context={"request": request}
+        )
         deserializer.is_valid(raise_exception=True)
         print(deserializer.data)
-        s_number = deserializer.data['s_number']
-        isActivated = deserializer.data['isActivated']
-        isComplete = deserializer.data['isComplete'] 
-        
-        state = deserializer.data['state'] 
-        
+        s_number = deserializer.data["s_number"]
+        isActivated = deserializer.data["isActivated"]
+        isComplete = deserializer.data["isComplete"]
+
+        state = deserializer.data["state"]
+
         # print(s_number)
         # print(stage.s_number)
         if s_number == 5:
-            print(s_number , "is the stage number , its 5 ")
+            # print(s_number , "is the stage number , its 5 ")
             if isComplete == True:
-                new_data= {
-                 "s_number": s_number,
-                 "state"  : "GREEN",
-                 "isActivated" : False,
-                 "isComplete"  : True   
+                new_data = {
+                    "s_number": s_number,
+                    "state": "GREEN",
+                    "isActivated": False,
+                    "isComplete": True,
                 }
-            for key , value in new_data.items():
-                setattr(stage , key, value)
+            for key, value in new_data.items():
+                setattr(stage, key, value)
             stage.save()
-            return Response({"text" : "This the last stage, stage is complete, problem must be finished  ", 
-                            "Data" : new_data
-            }
+            return Response(
+                {
+                    "text": "This the last stage, stage is complete, problem must be finished  ",
+                    "Data": new_data,
+                }
             )
-       
-        if  isComplete == True:
-            print("im here updating data")
-            if s_number != stage.s_number :
-               return Response({"text" : "User is at stage {0}   . Please check the current stage number , Increment to this is not possible ".format(stage.s_number), 
-                                        }
-            )
-            
-            new_data = {"s_number": s_number + 1,
-                 "state"  : "RED",
-                 "isActivated" : True,
-                 "isComplete"  : False          
-                 }
-            for key , value in new_data.items():
-                setattr(stage , key, value)
-            stage.save()
-            # stage.update_or_create(s_number = new_data['s_number'] , state= new_data['state'], 
-            # isActivated = new_data['isActivated'] , isComplete = new_data['isComplete'])
-            return Response({"text" : "you have moved to the next stage   ", 
-                            "Data" : new_data
 
+        if isComplete == True:
+            print("im here updating data")
+            if s_number != stage.s_number:
+                return Response(
+                    {
+                        "text": "User is at stage {0}   . Please check the current stage number , Increment to this is not possible ".format(
+                            stage.s_number
+                        ),
+                    }
+                )
+
+            new_data = {
+                "s_number": s_number + 1,
+                "state": "RED",
+                "isActivated": True,
+                "isComplete": False,
             }
+            for key, value in new_data.items():
+                setattr(stage, key, value)
+            stage.save()
+            # stage.update_or_create(s_number = new_data['s_number'] , state= new_data['state'],
+            # isActivated = new_data['isActivated'] , isComplete = new_data['isComplete'])
+            return Response(
+                {"text": "you have moved to the next stage   ", "Data": new_data}
             )
             # stage.s_number = int(request.data.get("s_number")) + 1
             # stage.state =  request.data.get("state")
             # stage.isActivated = True
             # stage.isComplete = False
             # stage.save()
-        else : 
+        else:
             new_data = {
                 "s_number": s_number,
-                 "state"  : state,
-                 "isActivated" : isActivated,
-                 "isComplete"  : isComplete         
-                 }
-           
-            
+                "state": state,
+                "isActivated": isActivated,
+                "isComplete": isComplete,
+            }
+
         # print( " update" , stage.s_number)
-        
+
         serializer = Solution_StageSerializer(stage, data=new_data)
-        serializer.is_valid(raise_exception=True )
+        serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         serializer.save()
 
@@ -360,22 +409,23 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
         # self.perform_update(serializer)
         # print(" after update" , serializer.data)
 
-        return Response({"text" : "the server responded with same data, did not update, isComplete is not True", 
-                         "Data" : serializer.data
+        return Response(
+            {
+                "text": "the server responded with same data, did not update, isComplete is not True",
+                "Data": serializer.data,
             }
-            )
+        )
 
 
-class GetAndDestroyStagesDetail(mixins.RetrieveModelMixin,
-                    
-                    mixins.DestroyModelMixin,
-                    generics.GenericAPIView):
-    
+class GetAndDestroyStagesDetail(
+    mixins.RetrieveModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView
+):
+
     queryset = Problem.objects.all()
     serializer_class = ProblemSerializer
     permission_classes = [IsAuthenticated]
-    
-    #you will need authorisation header :token for all methods below
+
+    # you will need authorisation header :token for all methods below
 
     """ request_method = get
     request url = http://127.0.0.1:8000/stage-detail/<int:pk>/
@@ -386,27 +436,30 @@ class GetAndDestroyStagesDetail(mixins.RetrieveModelMixin,
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
-    
+
     """ will remove the specific stage record  and its related recors from the db
         delete http://127.0.0.1:8000/stage-detail/<int:pk>/
 
         eg delete http://127.0.0.1:8000/stage-detail/3/
 
     """
+
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
 
-class UserDetail(mixins.RetrieveModelMixin,
-                    mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin,
-                    generics.GenericAPIView):
-    
+class UserDetail(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView,
+):
+
     queryset = CUser.objects.all()
     serializer_class = CUserSerializer
     permission_classes = [IsAuthenticated]
 
-    #you will need authorisation header :token for all methods below
+    # you will need authorisation header :token for all methods below
 
     """ request_method = get
     request url = http://127.0.0.1:8000/user-detail/<int:pk>/
@@ -415,11 +468,9 @@ class UserDetail(mixins.RetrieveModelMixin,
     i.e  user_id , username , email , password , first_name, last_name , profession, 
     name of organisation
     """
+
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
-    
-
-
 
     """ request_method = put
     request url = http://127.0.0.1:8000/prob-detail/<int:pk>/
@@ -434,36 +485,35 @@ class UserDetail(mixins.RetrieveModelMixin,
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
-
     """ will remove the specific user record  and its related recors from the db
         delete http://127.0.0.1:8000/user-detail/<int:pk>/
 
         eg delete http://127.0.0.1:8000/user-detail/3/
 
     """
+
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
 
-
 class GetView(generics.ListAPIView):
-   
-    # API endpoint that allows users to be viewed or edited. 
+
+    # API endpoint that allows users to be viewed or edited.
 
     queryset = CUser.objects.all()
     serializer_class = CUserSerializer
 
 
 class UserLogoutView(generics.ListAPIView):
-     
-    """  
-    authorisation header with request .
-     request method = get 
-     request url = http://127.0.0.1:8000/logout/
-     response = user logged out successfulyyy """
-   
-    permission_classes =([IsAuthenticated])
-    def get( self, request, format=None,  *args, **kwargs):
-        request.user.auth_token.delete()
-        return Response('User Logged out successfully')
 
+    """
+    authorisation header with request .
+     request method = get
+     request url = http://127.0.0.1:8000/logout/
+     response = user logged out successfulyyy"""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None, *args, **kwargs):
+        request.user.auth_token.delete()
+        return Response("User Logged out successfully")
