@@ -54,7 +54,7 @@ export default function WelcomePage() {
         }
       )
       .then((res) => {
-        console.log(res.data["Problem "]);
+        console.log(res.data.Problem);
 
         dispatch(
           updateProblem({
