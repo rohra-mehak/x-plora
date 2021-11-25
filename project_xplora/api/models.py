@@ -100,7 +100,7 @@ class  Solution_Stage(models.Model):
              
    belongs_to = models.OneToOneField(Problem, on_delete=models.CASCADE)
    s_number = models.IntegerField( choices=stage_number, default= 1)
-   state = models.CharField( max_length =6 ,choices= state_list, default= GREEN )
+   state = models.CharField( max_length =6 ,choices= state_list, default= YELLOW )
    isActivated = models.BooleanField(default=True)
    isComplete = models.BooleanField(default=False)
 
