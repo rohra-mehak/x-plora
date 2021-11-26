@@ -6,9 +6,6 @@ import loginReducer from "../features/Login/LoginSlicer";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
-    homePage: homePageReducer,
     user: loginReducer,
-    // form: formReducer,
   },
 });

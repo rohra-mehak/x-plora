@@ -6,13 +6,19 @@ export const LoginSlicer = createSlice({
     username: "",
     token: "",
     isAuthorized: false,
-    problemId: -1,
     problem: {
-      firstVisit: true,
+      isProblemCreated: false,
+      problemId: -1,
       problemName: "",
       description: "",
       dataTransferType: "",
-      // id: "",
+      stageDetails: {
+        pk: -1,
+        isActivated: false,
+        isComplete: false,
+        stageNumber: -1,
+        state: "YELLOW",
+      },
     },
   },
   reducers: {
@@ -20,8 +26,6 @@ export const LoginSlicer = createSlice({
       state.isAuthorized = action.payload.isAuthorized;
       state.username = action.payload.username;
       state.token = action.payload.token;
-      state.problem.firstVisit = action.payload.isFirstVisit;
-      state.problemId = action.payload.problem;
     },
 
     logOutUser: (state) => {
@@ -32,11 +36,36 @@ export const LoginSlicer = createSlice({
     },
 
     updateProblem: (state, action) => {
-      state.problem.problemName = action.payload.title;
-      state.problem.description = action.payload.description;
+      //STATE LOOKS LIKE :
+      // problem: {
+      //   isProblemCreated: false,
+      //   problemId: -1,
+      //   problemName: "",
+      //   description: "",
+      //   dataTransferType: "",
+      //   stageDetails: {
+      //     pk: -1,
+      //     isActivated: false,
+      //     isComplete: false,
+      //     stageNumber: -1,
+      //     state: "YELLOW",
+      //   },
+      // },
+      state.problem.isProblemCreated = true;
+      state.problem.problemId = action.payload["problem.pk"];
+      state.problem.problemName = action.payload["problem.title"];
+      state.problem.description = action.payload["problem.dataset_description"];
       state.problem.dataTransferType = action.payload.type;
-      state.problemId = action.payload.id;
-      state.problem.firstVisit = action.payload.firstVisit;
+      state.problem.stageDetails.pk =
+        action.payload.problem_stage_data["stage.pk"];
+      state.problem.stageDetails.isActivated =
+        action.payload.problem_stage_data["isActivated"];
+      state.problem.stageDetails.isComplete =
+        action.payload.problem_stage_data["isComplete"];
+      state.problem.stageDetails.stageNumber =
+        action.payload.problem_stage_data["s_number"];
+      state.problem.stageDetails.state =
+        action.payload.problem_stage_data["state"];
     },
   },
 });

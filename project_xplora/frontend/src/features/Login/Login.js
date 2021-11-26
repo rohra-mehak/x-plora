@@ -57,59 +57,79 @@ export default function Login(stat) {
 
   const didMountRef = useRef(false);
   const didMountRefII = useRef(false);
+
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
       console.log("skipp");
     } else {
-      // var datas = { "username": "sprash", "password": "stud123!" };
       axios({
         method: "post",
         url: "http://127.0.0.1:8000/login/",
         data: loginUserData,
       })
         .then((res) => {
-          console.log("here in response block");
-
-          // console.log("data", this.data)
-          const problemkey = res.data.problem_Ids[0][0];
+          console.log("here in response block", res);
+          const isProblemCreated = res.data.areProblemsCreated;
 
           dispatch(
             setUserCredentials({
               username: res.data.username,
               isAuthorized: true,
               token: res.data.token,
-              isFirstVisit: res.data.isFirstVisit,
-              problemId: res.data.problem_Ids[0][0],
             })
           );
 
-          if (problemkey !== -1) {
-            const headers = {
-              Authorization: `token ${res.data.token}`,
-            };
+          if (isProblemCreated) {
+            //THIS IS THE RES OF LOGIN-PROBLEMLIST
+            // problem.dataset_description: "My Ex cription"
+            // problem.pk: 7
+            // problem.title: "new Title"
+            // problem_stage_data:
+            // isActivated: true
+            // isComplete: false
+            // s_number: 1
+            // stage.pk: 8
+            // state: "GREEN"
 
-            console.log(headers);
+            dispatch(
+              updateProblem({
+                ...res.data.problem_list[0],
+                type: "Email",
+              })
+            );
 
-            axios({
-              method: "get",
-              url: `http://127.0.0.1:8000/prob-detail/${problemkey}/`,
-              headers: headers,
-            }).then((res) => {
-              dispatch(
-                updateProblem({
-                  title: res.data.title,
-                  description: res.data.dataset_description,
-                  type: "Via Email",
-                  id: problemkey,
-                  firstVisit: false,
-                })
-              );
-
-              console.log("we got problem description: ", res);
-            });
+            console.log("Problem ");
           }
+          // if (res.data.problem_list.length) {
+          //   const headers = {
+          //     Authorization: `token ${res.data.token}`,
+          //   };
+
+          //   console.log(headers);
+          //   const problem = res.data.problem_list[0];
+          //   const problemKey = problem["problem.pk"];
+
+          //   axios({
+          //     method: "get",
+          //     url: `http://127.0.0.1:8000/prob-detail/${problem["problem.pk"]}/`,
+          //     headers: headers,
+          //   }).then((res) => {
+          //     dispatch(
+          //       updateProblem({
+          //         title: res.data.title,
+          //         description: res.data.dataset_description,
+          //         type: "Via Email",
+          //         id: problemKey,
+          //         firstVisit: false,
+          //       })
+          //     );
+
+          //     console.log("we got problem description: ", res);
+          //   });
+          // }
         })
         .catch((err) => {
           console.log("here in error catched");
@@ -141,7 +161,6 @@ export default function Login(stat) {
             text: "User Created Successfully, Please Login.",
             type: "success",
           });
-          // e.target.reset();
         })
         .catch((err) => {
           console.log(err);
