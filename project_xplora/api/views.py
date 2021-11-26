@@ -123,12 +123,12 @@ class CustomAuthToken(ObtainAuthToken):
 
                 problem_list.append(
                     {
-                        "problem.pk": problem.pk,
-                        "problem.title": problem.title,
-                        "problem.dataset_description": problem.dataset_description,
+                        "problemPK": problem.pk,
+                        "problemTitle": problem.title,
+                        "problemDataset_description": problem.dataset_description,
                         "problem_stage_data":
                          {
-                            "stage.pk": stage.pk,
+                            "stagePk": stage.pk,
                             "state": stage.state,
                             "s_number": stage.s_number,
                             "isActivated": stage.isActivated,
