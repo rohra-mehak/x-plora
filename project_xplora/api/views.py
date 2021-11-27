@@ -292,11 +292,6 @@ class ProblemDetail(
         return self.destroy(request, *args, **kwargs)
 
 
-my_list = []
-
-
-def track_stages(dict):
-    my_list.append(dict)
 
 
 class SolutionStageUpdateview(generics.UpdateAPIView):
