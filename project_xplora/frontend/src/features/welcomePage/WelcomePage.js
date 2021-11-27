@@ -17,7 +17,7 @@ export default function WelcomePage() {
 
   const { token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
+  const history = useHistory();
   /**
    * initial state
    * problem: {
@@ -41,13 +41,6 @@ export default function WelcomePage() {
 
   const submitProblem = (e) => {
     e.preventDefault();
-    // const pr{
-    //   title: e.target[0].value,
-    //   dataset_description: e.target[1].value,
-    //   dataTransferType: 'Drive',
-    //   id: ''
-    // });
-
     console.log(e.target[0].value, e.target[1].value);
 
     const headers = {
@@ -69,21 +62,8 @@ export default function WelcomePage() {
       .then((res) => {
         console.log("res from the problem crete", res);
 
-        dispatch(
-          updateProblem({
-            problemPK: res.data.Problemn,
-            problemDataset_description: res.data.datadescription,
-            problemTitle: res.data.problem_title,
-            type: "Email",
-            problem_stage_data: {
-              stagePk: res.data.stage_pk,
-              isActivated: res.data.isActivated,
-              isComplete: res.data.isComplete,
-              s_number: res.data.s_number,
-              state: res.data.state,
-            },
-          })
-        );
+        dispatch(updateProblem(res.data));
+        history.push("./main");
       })
       .catch((err) => {
         console.log(headers);

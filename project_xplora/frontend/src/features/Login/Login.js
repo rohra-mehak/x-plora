@@ -91,6 +91,8 @@ export default function Login(stat) {
               })
             );
 
+            console.log(res);
+
             history.push("/main");
           } else {
             history.push("./createProblem");
