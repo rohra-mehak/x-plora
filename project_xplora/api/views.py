@@ -209,18 +209,25 @@ class CreateProblemView(generics.ListCreateAPIView):
 
         return Response(
             {
-                "user": user.username,
-                "email": user.email,
-                "Problem": problem.pk,
-                "problem_title": problem.title,
-                "datadescription": problem.dataset_description,
-                "problem_date": problem.created_on,
-                "stage_pk": stage.pk,
-                "s_number": stage.s_number,
-                "state": stage.state,
-                "isActivated": stage.isActivated,
-                "isComplete": stage.isComplete,
-                "solution_link": solution.solution_link,
+                "userData": {
+                    "userID": user.pk,
+                    "username": user.username,
+                    "email": user.email,
+                },
+                "GeneratedProblemData": {
+                    
+                    "problem_PK": problem.pk,
+                    "problem_Title": problem.title,
+                    "problem_Dataset_description": problem.dataset_description,
+                    "problem_stage_data": {
+                        "stage_Pk": stage.pk,
+                        "state": stage.state,
+                        "s_number": stage.s_number,
+                        "isActivated": stage.isActivated,
+                        "isComplete": stage.isComplete,
+                        "solution_link": solution.solution_link,
+                    },
+                },
             },
         )
         # else:
@@ -290,8 +297,6 @@ class ProblemDetail(
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
-
-
 
 
 class SolutionStageUpdateview(generics.UpdateAPIView):
