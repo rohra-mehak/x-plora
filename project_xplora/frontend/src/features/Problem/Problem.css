@@ -1,0 +1,25 @@
+#ll_container h2 {
+  color: rgb(0, 0, 0);
+  font-family: "Courier New", Courier, monospace;
+}
+
+.main_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+input {
+  height: 25px;
+}
+
+label {
+  font-size: 15px;
+  color: rgb(255, 255, 255);
+  font-family: "Courier New", Courier, monospace;
+}
+
+#details {
+  height: 20vh;
+}

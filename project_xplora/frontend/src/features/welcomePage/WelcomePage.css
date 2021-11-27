@@ -1,11 +1,10 @@
-.HomePage_PromptData{
-    /* min-height: 100vh; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    background-color: blueviolet;
-
+.HomePage_PromptData {
+  /* min-height: 100vh; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: blueviolet;
 }
 
 /* .main_container_earth{
@@ -18,7 +17,7 @@
     height: 100vh;
     width: 80%;
     /* min-height: 100vh; */
-    /* background: aquamarine; */
+/* background: aquamarine; */
 
 /* 
 .DataForm{
@@ -117,33 +116,30 @@
     top: 0;
     left: 0;
 
-} */ */
-
-.Form_container{
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    background-color: #295e77;
-    color: aliceblue;
-    z-index: 3;
-   
-    
+} */
+*/ .Form_container {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background-color: #295e77;
+  color: aliceblue;
+  z-index: 3;
 }
 
-h1{
-    color: aliceblue    ;
+h1 {
+  color: aliceblue;
 }
-label{
+/* label{
     font-family:'Courier New', Courier, monospace;
     font-size: 2em;
     color: aliceblue;
-}
+} */
 
-.form-control-tarea{
-    height: 40px;
-    width: 100%;
-    border-radius: 4px;
-    border: none;
+.form-control-tarea {
+  height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  border: none;
 }

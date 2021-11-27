@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-function setWithExpiry(key, value, ttl) {
+export function setWithExpiry(key, value, ttl) {
   const now = new Date();
 
   // `item` is an object which contains the original value
@@ -12,7 +12,7 @@ function setWithExpiry(key, value, ttl) {
   localStorage.setItem(key, JSON.stringify(item));
 }
 
-function getWithExpiry(key) {
+export function getWithExpiry(key) {
   const itemStr = localStorage.getItem(key);
   // if the item doesn't exist, return null
   if (!itemStr) {

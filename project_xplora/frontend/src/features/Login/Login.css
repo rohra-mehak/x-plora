@@ -186,7 +186,7 @@
 
 button {
   margin-top: 5px;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
 }
 #r_container {
   border: 2px solid wheat;
@@ -195,9 +195,10 @@ button {
   padding: 30px;
 }
 
-#r_container h2, #l_container h2{
-color: #fff;
-font-family:'Courier New', Courier, monospace;
+#r_container h2,
+#l_container h2 {
+  color: #fff;
+  font-family: "Courier New", Courier, monospace;
 }
 .form-group {
   /* background-color: aqua; */
@@ -209,4 +210,6 @@ input {
 
 label {
   font-size: 15px;
+  color: #fff;
+  font-family: "Courier New", Courier, monospace;
 }

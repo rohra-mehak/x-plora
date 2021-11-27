@@ -90,13 +90,13 @@ export default function Login(stat) {
                 type: "Email",
               })
             );
-
             console.log(res);
-
-            history.push("/main");
-          } else {
-            history.push("./createProblem");
           }
+
+          //What ever ut be, please redirect to the main pag after the successful login
+          // else dont.
+
+          history.push("/main");
         })
         .catch((err) => {
           console.log("here in error catched");
