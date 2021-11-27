@@ -274,6 +274,11 @@ class ProblemDetail(
         return self.destroy(request, *args, **kwargs)
 
 
+my_list =[]
+
+def track_stages(dict):
+    my_list.append(dict)
+
 class SolutionStageUpdateview(generics.UpdateAPIView):
 
     authentication_classes = [TokenAuthentication]
@@ -329,7 +334,7 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
         if s_number != stage.s_number:
             return Response(
                 {
-                    "text": "User is at stage {0}   . Please check the current stage number , Increment to this is not possible ".format(
+                    "text": "User is at stage {0}. Please check the current stage number , Increment to this is not possible ".format(
                         stage.s_number
                     ),
                 }
@@ -386,6 +391,8 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
                     "isActivated": True,
                     "isComplete": False,
                 }
+                # track_stages(deserializer.data)
+                # track_stages(new_data)
                 for key, value in new_data.items():
                     setattr(stage, key, value)
                     stage.save()
@@ -458,6 +465,7 @@ class GetAndDestroyStagesDetail(
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
 
 
 class UserDetail(
