@@ -1,3 +1,5 @@
+from typing import ClassVar
+from django.http.response import HttpResponseNotModified
 from django.views import generic
 from rest_framework import generics, mixins, serializers, status
 from django.shortcuts import render
@@ -16,6 +18,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import logout, login
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.signals import user_logged_in
+import json
 
 from rest_framework.decorators import (
     api_view,
@@ -123,25 +126,22 @@ class CustomAuthToken(ObtainAuthToken):
 
                 problem_list.append(
                     {
-                        "problemPK": problem.pk,
-                        "problemTitle": problem.title,
-                        "problemDataset_description": problem.dataset_description,
-                        "problem_stage_data":
-                         {
-                            "stagePk": stage.pk,
+                        "problem_PK": problem.pk,
+                        "problem_Title": problem.title,
+                        "problem_Dataset_description": problem.dataset_description,
+                        "problem_stage_data": {
+                            "stage_Pk": stage.pk,
                             "state": stage.state,
                             "s_number": stage.s_number,
                             "isActivated": stage.isActivated,
                             "isComplete": stage.isComplete,
                         },
-
                     }
                 )
             print(problem_list)
         else:
             problem_list = []
 
-       
         return Response(
             {
                 "token": token.key,
@@ -314,12 +314,7 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
 
     def update(self, request, pk, *args, **kwargs):
         stage = Solution_Stage.objects.get(pk=pk)
-        # stage.isActivated = request.data.get("isActivated")
-        # stage.state = request.data.get("state")
-        # isComplete = request.data.get("isComplete")
-
-        # print(type(isComplete))
-
+        
         deserializer = Solution_StageSerializer(
             data=request.data, context={"request": request}
         )
@@ -331,57 +326,88 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
 
         state = deserializer.data["state"]
 
-        # print(s_number)
-        # print(stage.s_number)
-        if s_number == 5:
-            # print(s_number , "is the stage number , its 5 ")
-            if isComplete == True:
-                new_data = {
-                    "s_number": s_number,
-                    "state": "GREEN",
-                    "isActivated": False,
-                    "isComplete": True,
-                }
-            for key, value in new_data.items():
-                setattr(stage, key, value)
-            stage.save()
+        if s_number != stage.s_number:
             return Response(
                 {
-                    "text": "This the last stage, stage is complete, problem must be finished  ",
-                    "Data": new_data,
+                    "text": "User is at stage {0}   . Please check the current stage number , Increment to this is not possible ".format(
+                        stage.s_number
+                    ),
                 }
             )
 
-        if isComplete == True:
-            print("im here updating data")
-            if s_number != stage.s_number:
+        if s_number == 5:
+            # print(s_number , "is the stage number , its 5 ")
+            if state == "GREEN" and isActivated == True:
+                if isComplete == True:
+                    new_data = {
+                        "s_number": s_number,
+                        "state": "GREEN",
+                        "isActivated": False,
+                        "isComplete": True,
+                    }
+                for key, value in new_data.items():
+                    setattr(stage, key, value)
+                    stage.save()
+
+                serializer = Solution_StageSerializer(stage, data=new_data)
+                serializer.is_valid(raise_exception=True)
+                self.perform_update(serializer)
+                serializer.save()
                 return Response(
                     {
-                        "text": "User is at stage {0}   . Please check the current stage number , Increment to this is not possible ".format(
-                            stage.s_number
-                        ),
+                        "text": "This the last stage, stage is complete, problem must be finished  ",
+                        "Data": serializer.data,
                     }
                 )
 
-            new_data = {
-                "s_number": s_number + 1,
-                "state": "RED",
-                "isActivated": True,
-                "isComplete": False,
-            }
-            for key, value in new_data.items():
-                setattr(stage, key, value)
-            stage.save()
-            # stage.update_or_create(s_number = new_data['s_number'] , state= new_data['state'],
-            # isActivated = new_data['isActivated'] , isComplete = new_data['isComplete'])
-            return Response(
-                {"text": "you have moved to the next stage   ", "Data": new_data}
-            )
-            # stage.s_number = int(request.data.get("s_number")) + 1
-            # stage.state =  request.data.get("state")
-            # stage.isActivated = True
-            # stage.isComplete = False
-            # stage.save()
+            else:
+                return Response(
+                    {
+                        "text": "Stage not completed by the analyst yet or is inActive, wait for state to turn green , or check your data  data not updated ",
+                    }
+                )
+
+        elif state == "GREEN" and isActivated == True:
+            if isComplete == True:
+                # print("im here updating data")
+                if s_number != stage.s_number:
+                    print(type(request.data))
+                    return Response(
+                        {
+                            "text": "User is at stage {0}   . Please check the current stage number , Increment to this is not possible ".format(
+                                stage.s_number
+                            ),
+                         } , status=status.HTTP_406_NOT_ACCEPTABLE
+                    )
+
+                new_data = {
+                    "s_number": s_number + 1,
+                    "state": "RED",
+                    "isActivated": True,
+                    "isComplete": False,
+                }
+                for key, value in new_data.items():
+                    setattr(stage, key, value)
+                    stage.save()
+
+                serializer = Solution_StageSerializer(stage, data=new_data)
+                serializer.is_valid(raise_exception=True)
+                self.perform_update(serializer)
+                serializer.save()
+
+                return Response(
+                    {
+                        "text": "you have moved to the next stage   ",
+                        "Data": serializer.data,
+                    }
+                )
+            else:
+                return Response(
+                    {
+                        "text": "Stage is not complete, you ccannot move to next stage. check if isComplete is True"
+                    }
+                )
+
         else:
             new_data = {
                 "s_number": s_number,
@@ -390,28 +416,14 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
                 "isComplete": isComplete,
             }
 
-        # print( " update" , stage.s_number)
-
         serializer = Solution_StageSerializer(stage, data=new_data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         serializer.save()
 
-        # serializer.save()
-        # print( " before update " , serializer.data)
-        # s_number = serializer.data['s_number']
-        # isComplete = serializer.data['isComplete']
-        # print("\n\nhere is s_number ", s_number)
-        # new_data  = stage.increment_stage_and_update(s_number ,isComplete)
-        # print("new data\n\n", new_data)
-        # serializer = Solution_StageSerializer(stage, data=new_data)
-        # serializer.is_valid(raise_exception=True)
-        # self.perform_update(serializer)
-        # print(" after update" , serializer.data)
-
         return Response(
             {
-                "text": "the server responded with same data, did not update, isComplete is not True",
+                "text": "Stage not completed by the analyst yet or is inActive, wait for state to turn green , or check your data  data not updated ",
                 "Data": serializer.data,
             }
         )
