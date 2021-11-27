@@ -1,5 +1,5 @@
 from typing import ClassVar
-from django.http.response import HttpResponseNotModified
+from django.http.response import HttpResponseNotModified, JsonResponse
 from django.views import generic
 from rest_framework import generics, mixins, serializers, status
 from django.shortcuts import render
@@ -247,8 +247,26 @@ class ProblemDetail(
     i.e  title, dataset_description , author , created_on 
     """
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+    def get(self, request, pk, *args, **kwargs):
+        problem = Problem.objects.get(pk=pk)
+        stage = Solution_Stage.objects.filter(belongs_to=problem).first()
+
+        return JsonResponse(
+            {
+                "problem_PK": problem.pk,
+                "problem_Title": problem.title,
+                "problem_Dataset_description": problem.dataset_description,
+                "problem_stage_data": {
+                    "stage_Pk": stage.pk,
+                    "state": stage.state,
+                    "s_number": stage.s_number,
+                    "isActivated": stage.isActivated,
+                    "isComplete": stage.isComplete,
+                },
+            }
+        )
+
+    # return self.retrieve(request, *args, **kwargs)
 
     """ request_method = put
     request url = http://127.0.0.1:8000/prob-detail/<int:pk>/
@@ -274,10 +292,12 @@ class ProblemDetail(
         return self.destroy(request, *args, **kwargs)
 
 
-my_list =[]
+my_list = []
+
 
 def track_stages(dict):
     my_list.append(dict)
+
 
 class SolutionStageUpdateview(generics.UpdateAPIView):
 
@@ -319,7 +339,7 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
 
     def update(self, request, pk, *args, **kwargs):
         stage = Solution_Stage.objects.get(pk=pk)
-        
+
         deserializer = Solution_StageSerializer(
             data=request.data, context={"request": request}
         )
@@ -382,7 +402,8 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
                             "text": "User is at stage {0}   . Please check the current stage number , Increment to this is not possible ".format(
                                 stage.s_number
                             ),
-                         } , status=status.HTTP_406_NOT_ACCEPTABLE
+                        },
+                        status=status.HTTP_406_NOT_ACCEPTABLE,
                     )
 
                 new_data = {
@@ -465,7 +486,6 @@ class GetAndDestroyStagesDetail(
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
-
 
 
 class UserDetail(
