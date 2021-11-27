@@ -6,11 +6,15 @@ import "./WelcomePage.css";
 import { useSelector, useDispatch } from "react-redux";
 import { updateProblem } from "../Login/LoginSlicer";
 // import { setUserCredentials, logOutUser } from "./LoginSlicer";
-
+import { useHistory, Route, Switch } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import MainPage from "../MainPage/MainPage";
 export default function WelcomePage() {
-  const firstVisit = useSelector((state) => state.user.problem.firstVisit);
+  const isProblemCreated = useSelector(
+    (state) => state.user.problem.isProblemCreated
+  );
+
   const { token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
@@ -33,7 +37,7 @@ export default function WelcomePage() {
 
   let problem = useSelector((state) => state.user.problem);
 
-  console.log("please check: ", problem);
+  // console.log("please check: ", problem);
 
   const submitProblem = (e) => {
     e.preventDefault();
@@ -63,19 +67,23 @@ export default function WelcomePage() {
         }
       )
       .then((res) => {
-        console.log(res.data.Problem);
+        console.log("res from the problem crete", res);
 
         dispatch(
           updateProblem({
-            title: res.data.problem_title,
-            description: res.data.datadescription,
-            type: "Via Email",
-            id: res.data.Problem,
-            firstVisit: false,
+            problemPK: res.data.Problemn,
+            problemDataset_description: res.data.datadescription,
+            problemTitle: res.data.problem_title,
+            type: "Email",
+            problem_stage_data: {
+              stagePk: res.data.stage_pk,
+              isActivated: res.data.isActivated,
+              isComplete: res.data.isComplete,
+              s_number: res.data.s_number,
+              state: res.data.state,
+            },
           })
         );
-
-        updateProblem();
       })
       .catch((err) => {
         console.log(headers);
@@ -83,9 +91,11 @@ export default function WelcomePage() {
       });
   };
 
-  return firstVisit ? (
-    <section className="HomePage_PromptData">
-      {/* <div className="main_container_earth">
+  return (
+    <Switch>
+      <Route path="/createProblem">
+        <section className="HomePage_PromptData" id="createProblem">
+          {/* <div className="main_container_earth">
                 <div className="DataForm">
                     <h1>Form</h1>
                 </div>
@@ -95,40 +105,36 @@ export default function WelcomePage() {
                     </div>
                 </div>
           </div> */}
-      <div className="Form_container">
-        <h1> Step 1: Define Problem</h1>
+          <div className="Form_container">
+            <h1> Step 1: Define Problem</h1>
 
-        <form onSubmit={submitProblem}>
-          <div className="form-group-problem">
-            <label>Problem Title</label>
-            <input type="text" className="form-control" />
-            {/* <small className="text-danger">Name is required.</small> */}
+            <form onSubmit={submitProblem}>
+              <div className="form-group-problem">
+                <label>Problem Title</label>
+                <input type="text" className="form-control" />
+                {/* <small className="text-danger">Name is required.</small> */}
+              </div>
+
+              <div className="form-group-problem">
+                <label>Problem Description</label>
+                <input type="text" className="form-control" />
+                {/* <small className="text-danger">Name is required.</small> */}
+              </div>
+
+              <button
+                type="submit"
+                className="btn btn-block btn-danger"
+                // onClick={dumpData}
+              >
+                Create Problem
+              </button>
+            </form>
           </div>
+        </section>
+      </Route>
 
-          <div className="form-group-problem">
-            <label>Problem Description</label>
-            <input type="text" className="form-control" />
-            {/* <small className="text-danger">Name is required.</small> */}
-          </div>
-
-          <button
-            type="submit"
-            className="btn btn-block btn-danger"
-            // onClick={dumpData}
-          >
-            Create Problem
-          </button>
-        </form>
-      </div>
-    </section>
-  ) : (
-    <section className="HomePage">
-      <h1>{console.log("problem", problem)}</h1>
-      <h1> title: {problem.firstVisit}</h1>
-      <h1> title: {problem.description}</h1>
-      <h1> title: {problem.dataTransferType}</h1>
-    </section>
+      <Route path="/main" component={MainPage} />
+    </Switch>
   );
 }
-
 // export default HomePage;

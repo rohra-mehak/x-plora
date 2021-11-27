@@ -1,12 +1,12 @@
-import React, { useState , Fragment} from "react";
-import {useSelector, useDispatch} from 'react-redux';
-import {logOutUser} from './features/Login/LoginSlicer'
+import React, { useState, Fragment } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { logOutUser } from "./features/Login/LoginSlicer";
 import logo from "./logo.svg";
 import { Counter } from "./features/counter/Counter";
 import "./App.css";
 import Homepage from "./features/homepage/Home";
 import WelcomePage from "./features/welcomePage/WelcomePage";
-
+import { Route, Switch, useHistory } from "react-router-dom";
 import Login from "./features/Login/Login";
 import Contact from "./features/contact/Contact";
 // import ReactFullpage from '@fullpage/react-fullpage-umd'; // will return static version on server and "live" version on client
@@ -50,21 +50,21 @@ function App() {
     setActiveTab.placeholder = "active";
   };
   const dispatch = useDispatch();
-  function logoutAction(){
-    console.log("triggered")
+  function logoutAction() {
+    console.log("triggered");
     dispatch(logOutUser());
   }
-  const  {username} = useSelector((state) => state.user);
-  const  {token} = useSelector((state) => state.user);
+  const { username } = useSelector((state) => state.user);
+  const { token } = useSelector((state) => state.user);
 
-  const  {isAuthorized} = useSelector((state) => state.user);
+  const { isAuthorized } = useSelector((state) => state.user);
 
-  const disp = isAuthorized? 'none !important': 'visible'
+  const disp = isAuthorized ? "none !important" : "visible";
   console.log(disp);
 
-  return (
-      !isAuthorized? 
-      <div className="App">
+  const history = useHistory();
+  return !isAuthorized ? (
+    <div className="App">
       <header>
         <a href="." id="logo" className={activeTab.logo}>
           X-plora
@@ -119,15 +119,14 @@ function App() {
       <section className="Login">
         <Login />
       </section>
-
       <section className="Contact">
         <Contact />
       </section>
-    </div>:
+    </div>
+  ) : (
     <div className="App">
-      <WelcomePage/>
-  </div>
-
+      <WelcomePage />
+    </div>
   );
 }
 export default App;

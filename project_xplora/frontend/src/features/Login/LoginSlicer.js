@@ -1,14 +1,44 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+function setWithExpiry(key, value, ttl) {
+  const now = new Date();
+
+  // `item` is an object which contains the original value
+  // as well as the time when it's supposed to expire
+  const item = {
+    value: value,
+    expiry: now.getTime() + ttl,
+  };
+  localStorage.setItem(key, JSON.stringify(item));
+}
+
+function getWithExpiry(key) {
+  const itemStr = localStorage.getItem(key);
+  // if the item doesn't exist, return null
+  if (!itemStr) {
+    return null;
+  }
+  const item = JSON.parse(itemStr);
+  const now = new Date();
+  // compare the expiry time of the item with the current time
+  if (now.getTime() > item.expiry) {
+    // If the item is expired, delete the item from storage
+    // and return null
+    localStorage.removeItem(key);
+    return null;
+  }
+  return item.value;
+}
+
 export const LoginSlicer = createSlice({
   name: "loginState",
   initialState: {
-    username: "",
-    token: "",
-    isAuthorized: false,
+    username: getWithExpiry("username"),
+    token: getWithExpiry("token"),
+    isAuthorized: getWithExpiry("isAuthorized"),
     problem: {
       isProblemCreated: false,
-      problemId: -1,
+      problemId: getWithExpiry("problemId"),
       problemName: "",
       description: "",
       dataTransferType: "",
@@ -26,6 +56,11 @@ export const LoginSlicer = createSlice({
       state.isAuthorized = action.payload.isAuthorized;
       state.username = action.payload.username;
       state.token = action.payload.token;
+
+      setWithExpiry("username", action.payload.username, 100000);
+      setWithExpiry("isAuthorized", action.payload.isAuthorized, 100000);
+      setWithExpiry("token", action.payload.token, 100000);
+      console.log("done according to me");
     },
 
     logOutUser: (state) => {
@@ -52,20 +87,21 @@ export const LoginSlicer = createSlice({
       //   },
       // },
       state.problem.isProblemCreated = true;
-      state.problem.problemId = action.payload["problem.pk"];
-      state.problem.problemName = action.payload["problem.title"];
-      state.problem.description = action.payload["problem.dataset_description"];
+      state.problem.problemId = action.payload.problemPK;
+      state.problem.problemName = action.payload.problemTitle;
+      state.problem.description = action.payload.problemDataset_description;
       state.problem.dataTransferType = action.payload.type;
-      state.problem.stageDetails.pk =
-        action.payload.problem_stage_data["stage.pk"];
+      state.problem.stageDetails.pk = action.payload.problem_stage_data.stagePk;
       state.problem.stageDetails.isActivated =
-        action.payload.problem_stage_data["isActivated"];
+        action.payload.problem_stage_data.isActivated;
       state.problem.stageDetails.isComplete =
-        action.payload.problem_stage_data["isComplete"];
+        action.payload.problem_stage_data.isComplete;
       state.problem.stageDetails.stageNumber =
-        action.payload.problem_stage_data["s_number"];
+        action.payload.problem_stage_data.s_number;
       state.problem.stageDetails.state =
-        action.payload.problem_stage_data["state"];
+        action.payload.problem_stage_data.state;
+
+      setWithExpiry("problemId", action.payload.problemPK, 100000);
     },
   },
 });

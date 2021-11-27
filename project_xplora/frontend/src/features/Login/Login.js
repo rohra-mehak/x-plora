@@ -4,6 +4,7 @@ import "./Login.css";
 import axios from "axios";
 import STARS from "./stars.png";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { setUserCredentials, logOutUser, updateProblem } from "./LoginSlicer";
 
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
@@ -59,7 +60,7 @@ export default function Login(stat) {
   const didMountRefII = useRef(false);
 
   const dispatch = useDispatch();
-
+  const history = useHistory();
   useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
@@ -83,17 +84,6 @@ export default function Login(stat) {
           );
 
           if (isProblemCreated) {
-            //THIS IS THE RES OF LOGIN-PROBLEMLIST
-            // problem.dataset_description: "My Ex cription"
-            // problem.pk: 7
-            // problem.title: "new Title"
-            // problem_stage_data:
-            // isActivated: true
-            // isComplete: false
-            // s_number: 1
-            // stage.pk: 8
-            // state: "GREEN"
-
             dispatch(
               updateProblem({
                 ...res.data.problem_list[0],
@@ -101,35 +91,10 @@ export default function Login(stat) {
               })
             );
 
-            console.log("Problem ");
+            history.push("/main");
+          } else {
+            history.push("./createProblem");
           }
-          // if (res.data.problem_list.length) {
-          //   const headers = {
-          //     Authorization: `token ${res.data.token}`,
-          //   };
-
-          //   console.log(headers);
-          //   const problem = res.data.problem_list[0];
-          //   const problemKey = problem["problem.pk"];
-
-          //   axios({
-          //     method: "get",
-          //     url: `http://127.0.0.1:8000/prob-detail/${problem["problem.pk"]}/`,
-          //     headers: headers,
-          //   }).then((res) => {
-          //     dispatch(
-          //       updateProblem({
-          //         title: res.data.title,
-          //         description: res.data.dataset_description,
-          //         type: "Via Email",
-          //         id: problemKey,
-          //         firstVisit: false,
-          //       })
-          //     );
-
-          //     console.log("we got problem description: ", res);
-          //   });
-          // }
         })
         .catch((err) => {
           console.log("here in error catched");
@@ -142,7 +107,7 @@ export default function Login(stat) {
           });
         });
     }
-  }, [dispatch, loginUserData]);
+  }, [dispatch, loginUserData, history]);
 
   useEffect(() => {
     if (!didMountRefII.current) {
