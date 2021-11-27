@@ -87,11 +87,12 @@ export const LoginSlicer = createSlice({
       //   },
       // },
       state.problem.isProblemCreated = true;
-      state.problem.problemId = action.payload.problemPK;
-      state.problem.problemName = action.payload.problemTitle;
-      state.problem.description = action.payload.problemDataset_description;
+      state.problem.problemId = action.payload.problem_PK;
+      state.problem.problemName = action.payload.problem_Title;
+      state.problem.description = action.payload.problem_Dataset_description;
       state.problem.dataTransferType = action.payload.type;
-      state.problem.stageDetails.pk = action.payload.problem_stage_data.stagePk;
+      state.problem.stageDetails.pk =
+        action.payload.problem_stage_data.stage_Pk;
       state.problem.stageDetails.isActivated =
         action.payload.problem_stage_data.isActivated;
       state.problem.stageDetails.isComplete =
@@ -101,7 +102,7 @@ export const LoginSlicer = createSlice({
       state.problem.stageDetails.state =
         action.payload.problem_stage_data.state;
 
-      setWithExpiry("problemId", action.payload.problemPK, 100000);
+      setWithExpiry("problemId", action.payload.problem_PK, 100000);
     },
   },
 });
