@@ -19,7 +19,7 @@ import Contact from "./features/contact/Contact";
 // import ReactFullpage from '@fullpage/react-fullpage-umd'; // will return static version on server and "live" version on client
 
 function App() {
-  // const isAuthorized = getWithExpiry("isAuthorized");
+  const isAuthorized = useSelector((state) => state.user.isAuthorized);
 
   const history = useHistory();
 
@@ -34,13 +34,15 @@ function App() {
   // }
 
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={LandingPage} />
+    // <Router>
+    //   <Switch>
+    //     <Route exact path="/" component={LandingPage} />
 
-        <Route path="/main" component={WelcomePage} />
-      </Switch>
-    </Router>
+    //     <Route path="/main" component={WelcomePage} />
+    //   </Switch>
+    // </Router>
+
+    isAuthorized ? <WelcomePage /> : <LandingPage />
   );
 }
 export default App;

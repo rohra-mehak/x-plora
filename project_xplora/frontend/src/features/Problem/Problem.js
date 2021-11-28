@@ -5,10 +5,11 @@ import { updateProblem } from "../Login/LoginSlicer";
 import "./Problem.css";
 import axios from "axios";
 
-function Problem(submitted) {
+function Problem(props) {
   const { token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
+  const submitted = props.submitted;
   const submitProblem = (e) => {
     e.preventDefault();
 
@@ -30,7 +31,7 @@ function Problem(submitted) {
       )
       .then((res) => {
         console.log("res from the problem crete", res);
-        dispatch(updateProblem(res.data));
+        dispatch(updateProblem(res.data.GeneratedProblemData));
         submitted();
       })
       .catch((err) => {

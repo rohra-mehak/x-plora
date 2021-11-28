@@ -7,12 +7,17 @@ import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Problem from "../Problem/Problem";
 import Login from "../Login/Login";
+import MainPage from "../MainPage/MainPage";
 export default function WelcomePage() {
   let userData = useSelector((state) => state.user);
+  let isProblemCreated = getWithExpiry("problemId");
 
-  // useEffect(() => {
-  //   console.log(userData);
-  // }, []);
+  useEffect(() => {
+    console.log("Bhenchiod welcompage mounted");
+    // isProblemCreated = getWithExpiry("problemId");
+  }, []);
+
+  console.log("starting fromt he bottom ", userData);
 
   const [editProblemVisibility, setEditProblemVisibility] = useState(
     !userData.problem.isProblemCreated
@@ -26,7 +31,6 @@ export default function WelcomePage() {
   const { token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const history = useHistory();
-  let problem = useSelector((state) => state.user.problem);
 
   const submitProblem = (e) => {
     e.preventDefault();
@@ -60,7 +64,8 @@ export default function WelcomePage() {
       });
   };
 
-  return editProblemVisibility ? <Problem submitted /> : <Login />;
+  console.log(isProblemCreated);
+  return isProblemCreated ? <MainPage /> : <Problem />;
 }
 // export default HomePage;
 

@@ -96,7 +96,7 @@ export default function Login(stat) {
           //What ever ut be, please redirect to the main pag after the successful login
           // else dont.
 
-          history.push("/main");
+          // history.push("/main");
         })
         .catch((err) => {
           console.log("here in error catched");

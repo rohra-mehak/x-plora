@@ -30,6 +30,26 @@ export function getWithExpiry(key) {
   return item.value;
 }
 
+// const initialState = {
+//   username: "",
+//   token: "",
+//   isAuthorized: false,
+//   problem: {
+//     isProblemCreated: false,
+//     problemId: "",
+//     problemName: "",
+//     description: "",
+//     dataTransferType: "",
+//     stageDetails: {
+//       pk: -1,
+//       isActivated: false,
+//       isComplete: false,
+//       stageNumber: -1,
+//       state: "YELLOW",
+//     },
+//   },
+// };
+
 export const LoginSlicer = createSlice({
   name: "loginState",
   initialState: {
@@ -64,10 +84,22 @@ export const LoginSlicer = createSlice({
     },
 
     logOutUser: (state) => {
-      console.log("loggin out");
+      console.log("Logging out");
+      // state = { ...initialState };
+      console.log(state);
       state.isAuthorized = false;
       state.username = "";
       state.token = "";
+      state.problem.isProblemCreated = true;
+      state.problem.problemId = "";
+      state.problem.problemName = "";
+      state.problem.description = "";
+      state.problem.dataTransferType = "Email";
+      state.problem.stageDetails.pk = "";
+      state.problem.stageDetails.isActivated = false;
+      state.problem.stageDetails.isComplete = false;
+      state.problem.stageDetails.stageNumber = -1;
+      state.problem.stageDetails.state = -1;
     },
 
     updateProblem: (state, action) => {
@@ -90,7 +122,7 @@ export const LoginSlicer = createSlice({
       state.problem.problemId = action.payload.problem_PK;
       state.problem.problemName = action.payload.problem_Title;
       state.problem.description = action.payload.problem_Dataset_description;
-      state.problem.dataTransferType = action.payload.type;
+      state.problem.dataTransferType = "Email";
       state.problem.stageDetails.pk =
         action.payload.problem_stage_data.stage_Pk;
       state.problem.stageDetails.isActivated =
