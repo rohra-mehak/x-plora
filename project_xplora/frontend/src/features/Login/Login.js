@@ -84,6 +84,7 @@ export default function Login(stat) {
           );
 
           if (isProblemCreated) {
+            console.log();
             dispatch(
               updateProblem({
                 ...res.data.problem_list[0],

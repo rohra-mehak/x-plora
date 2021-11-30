@@ -85,7 +85,7 @@ function LandingPage() {
               className={activeTab.feature}
               onClick={toggleClassName}
             >
-              Featues
+              Features
             </a>
           </li>
           <li>

@@ -41,6 +41,7 @@
   padding: 6px 6px;
   color: azure;
   border-radius: 8px;
+  font-family: "poppins", Arial, Helvetica, sans-serif;
 }
 .App header ul li a:hover,
 .App header ul li a.active {

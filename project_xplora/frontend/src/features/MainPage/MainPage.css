@@ -1,4 +1,121 @@
-.HomePage {
+.MainPage {
+  min-height: 100vh;
+}
+
+.MainPage header {
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 50px;
+  z-index: 1000;
+  background-color: #241e50;
+}
+.MainPage header .logo {
+  color: azure;
+  text-decoration: none;
+  font-size: 2em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-radius: 8px;
+}
+.MainPage header .logo:hover {
+  font-size: 2.1em;
+  transition: 0.2s;
+}
+.MainPage header ul {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.MainPage header ul li {
+  list-style: none;
+  margin-left: 20px;
+}
+.MainPage header ul li a,
+button {
+  text-decoration: none;
+  padding: 6px 6px;
+  color: azure;
+  border-radius: 8px;
+  background-color: transparent;
+}
+.MainPage header ul li a:hover,
+.MainPage header ul li a.active {
+  background: azure;
+  color: black;
+  transition: 1s;
+}
+
+.Problem {
   height: 100vh;
-  background-color: aqua;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 5vh;
+
+  background-color: #292358; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5vh;
+  /* border: 2px solid goldenrod; */
+  border-radius: 2px;
+  height: 70vh;
+  width: 40vw;
+  position: relative;
+}
+
+.box {
+  height: 80%;
+  width: auto;
+  object-fit: cover;
+}
+
+.Content {
+  border: 2px solid goldenrod;
+  height: 70vh;
+  width: 40vw;
+  margin-top: 5vh;
+  padding: 2em;
+  color: aliceblue;
+  position: relative;
+}
+
+footer {
+  position: absolute;
+  bottom: 2em;
+}
+
+.pen {
+  height: 2em;
+  position: absolute;
+  right: 0.5em;
+}
+
+h3 {
+  padding: 5px;
+  background-color: #241e50;
+}
+
+.dataAndEdit {
+  display: flex;
+  align-items: center;
+  /* padding: 5px; */
+  position: relative;
+  /* width: 5200px; */
+  /* background-color: #524e77; */
+}
+
+.editProblemPopup {
+  height: 500px;
+  width: auto;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.835);
 }
