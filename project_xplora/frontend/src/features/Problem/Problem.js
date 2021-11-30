@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory, Route, Switch } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -42,17 +43,17 @@ function Problem(props) {
 
   return (
     <div className="main_container">
-      <div id="ll_container">
-        <h2> Problem Details</h2>
+      <div className="editProblemPopup">
+        <h2 id="pro">Create a Poblem</h2>
         <form onSubmit={submitProblem}>
-          <div className="lform-group">
-            <label>Title</label>
-            <input type="text" className="lform-control" />
+          <div className="eform-group">
+            <label id="edetails">Title</label>
+            <input type="text" className="eform-control" />
           </div>
 
-          <div className="lform-group">
-            <label>Description</label>
-            <input type="text" id="details" className="lform-control" />
+          <div className="eform-group">
+            <label id="edetails">Description</label>
+            <textarea type="text-area" className="eform-control" />
           </div>
 
           <br></br>

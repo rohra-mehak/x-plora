@@ -65,7 +65,7 @@ export default function WelcomePage() {
   };
 
   console.log(isProblemCreated);
-  return isProblemCreated ? <MainPage /> : <Problem />;
+  return isProblemCreated ? <MainPage /> : <Problem submitted={submitted} />;
 }
 // export default HomePage;
 

@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, useRef, useEffect } from "react-redux";
 import { logOutUser } from "./features/Login/LoginSlicer";
 import logo from "./logo.svg";
 import { Counter } from "./features/counter/Counter";
@@ -19,10 +19,10 @@ import Contact from "./features/contact/Contact";
 // import ReactFullpage from '@fullpage/react-fullpage-umd'; // will return static version on server and "live" version on client
 
 function App() {
-  const isAuthorized = useSelector((state) => state.user.isAuthorized);
+  let isAuthorized = useSelector((state) => state.user.isAuthorized);
 
   const history = useHistory();
-
+  // const refAuth = useRef(isAuthorized);
   // function requireAuth(nextState, replace, next) {
   //   if (isAuthorized === true) {
   //     replace({
@@ -32,6 +32,10 @@ function App() {
   //   }
   //   next();
   // }
+
+  // useEffect(() => {
+  //   refAuth.current = getWithExpiry("isAuthorized") || false;
+  // }, []);
 
   return (
     // <Router>

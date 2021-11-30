@@ -77,9 +77,9 @@ export const LoginSlicer = createSlice({
       state.username = action.payload.username;
       state.token = action.payload.token;
 
-      setWithExpiry("username", action.payload.username, 100000);
-      setWithExpiry("isAuthorized", action.payload.isAuthorized, 100000);
-      setWithExpiry("token", action.payload.token, 100000);
+      setWithExpiry("username", action.payload.username, 1000000000000);
+      setWithExpiry("isAuthorized", action.payload.isAuthorized, 10000000000);
+      setWithExpiry("token", action.payload.token, 100000000000);
       console.log("done according to me");
     },
 
@@ -134,7 +134,7 @@ export const LoginSlicer = createSlice({
       state.problem.stageDetails.state =
         action.payload.problem_stage_data.state;
 
-      setWithExpiry("problemId", action.payload.problem_PK, 100000);
+      setWithExpiry("problemId", action.payload.problem_PK, 1000000000000);
     },
   },
 });

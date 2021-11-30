@@ -7,7 +7,7 @@ import { getWithExpiry, logOutUser, updateProblem } from "../Login/LoginSlicer";
 import EARTHGIF from "./Bharat.gif";
 import "./MainPage.css";
 import PEN from "./pen.png";
-
+import * as stageHelper from "./utils.js";
 function useForceUpdate() {
   const [value, setValue] = useState(0); // integer state
   return () => setValue((value) => value + 1); // update the state to force render
@@ -85,10 +85,10 @@ export default function MainPage() {
     const url = `http://127.0.0.1:8000/prob-detail/${
       getWithExpiry("problemId") || ""
     }/`;
-    const payload = {
-      title: e.target[0].value || problem.problemName,
-      dataset_description: e.target[1].value || problem.description,
-    };
+    const payload = {};
+
+    if (e.target[0].value) payload.title = e.target[0].value;
+    if (e.target[1].value) payload.dataset_description = e.target[1].value;
 
     const headers = {
       Authorization: `token ${getWithExpiry("token") || ""}`,
@@ -98,24 +98,28 @@ export default function MainPage() {
     console.log(url);
 
     console.log(headers);
+    // console.log(payload{});
 
-    axios({
-      method: "put",
-      url: url,
-      headers: headers,
-      data: payload,
-    })
-      .then((res) => {
-        console.log(res);
-        setEditProblem(false);
+    if (payload.dataset_description || payload.title) {
+      axios({
+        method: "put",
+        url: url,
+        headers: headers,
+        data: payload,
       })
-      .catch((err) => setEditProblem(false));
-
+        .then((res) => {
+          console.log(res);
+          setEditProblem(false);
+        })
+        .catch((err) => setEditProblem(false));
+    }
     change = 2;
   }
 
+  let loopIds = [1, 2, 3, 4, 5];
+
   return (
-    <section className="MainPage" id="main">
+    <div className="MainPage" id="main">
       <header>
         <a href="." id="logo" className={activeTab.logo}>
           X-plora
@@ -123,7 +127,7 @@ export default function MainPage() {
         <ul>
           <li>
             <a
-              href="."
+              href="#Problem"
               id="problem"
               className={activeTab.problem}
               onClick={toggleClassName}
@@ -133,8 +137,8 @@ export default function MainPage() {
           </li>
           <li>
             <a
-              href="#soultion"
-              id="Solution"
+              href="#Solution"
+              id="solution"
               className={activeTab.solution}
               onClick={toggleClassName}
             >
@@ -216,6 +220,56 @@ export default function MainPage() {
           <img src={EARTHGIF} className="box" />
         </div>
       </section>
-    </section>
+
+      <section id="Solution" className="Solution">
+        <div className="StageContainer">
+          {loopIds.map((id) => {
+            let style = {
+              // color: "aliceblue",
+            };
+            let stageDetails = problem.stageDetails;
+            let state = stageDetails.state;
+            // let isActivated = problem.stageDetails.isActivated;
+            //lets fix Colours
+            if (id === problem.stageDetails.stageNumber) {
+              switch (state) {
+                case "YELLOW":
+                  style = stageHelper.isActiveYellow;
+                  break;
+
+                case "GREEN":
+                  style = stageHelper.isActiveGreen;
+                  break;
+
+                case "RED":
+                  style = stageHelper.isActiveRed;
+                  break;
+
+                default:
+                  break;
+              }
+            } else if (id < problem.stageDetails.stageNumber) {
+              style = stageHelper.isInactiveState;
+            } else {
+              style = stageHelper.isInactiveFresh;
+            }
+
+            let hidden = !(
+              problem.stageDetails.isComplete && id === stageDetails.stageNumber
+            );
+
+            return (
+              <div style={style} className="Stage">
+                <div id="numberAndName">
+                  <h5>{id}</h5>
+                  <h4>{stageHelper.titles[id - 1]}</h4>
+                </div>
+                {/* <button hidden={hidden}>bhow</button> */}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    </div>
   );
 }
