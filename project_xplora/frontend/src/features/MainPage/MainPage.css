@@ -79,13 +79,27 @@ button {
 }
 
 .Content {
-  border: 2px solid goldenrod;
+  /* border: 2px solid goldenrod; */
+  /* box-shadow: 0px 0px 20px goldenrod; */
   height: 70vh;
   width: 40vw;
   margin-top: 5vh;
   padding: 2em;
   color: aliceblue;
   position: relative;
+  border-radius: 20px;
+  animation: shadoww 1.5s linear infinite;
+}
+@keyframes shadoww {
+  0% {
+    box-shadow: 0px 0px 5px goldenrod;
+  }
+  50% {
+    box-shadow: 0px 0px 25px goldenrod;
+  }
+  100% {
+    box-shadow: 0px 0px 5px goldenrod;
+  }
 }
 
 footer {
@@ -114,8 +128,43 @@ h3 {
 }
 
 .editProblemPopup {
-  height: 500px;
-  width: auto;
+  height: auto;
+  width: 600px;
   border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.835);
+  background-color: rgba(43, 38, 122, 0.424);
+  position: absolute;
+  z-index: 1;
+  padding: 2em;
+}
+
+.eform-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.eform-control {
+  width: 50%;
+  border-radius: 5px;
+  border: none;
+
+  padding: 10px 5px;
+}
+#close {
+  position: absolute;
+  right: 0.5em;
+  top: 0.5em;
+  font-size: 2em;
+  color: aliceblue;
+  font-weight: 500;
+  background-color: rgba(255, 0, 0, 0.507);
+  border-radius: 50%;
+  z-index: 2;
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  /* pointer-events: none; */
+}
+
+#edetails {
+  font-size: 1.5em;
 }

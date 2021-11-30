@@ -1,27 +1,30 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { logOutUser, updateProblem } from "../Login/LoginSlicer";
-// import { setUserCredentials, logOutUser } from "./LoginSlicer";
-import { useHistory, Route, Switch } from "react-router-dom";
 import axios from "axios";
-import "./MainPage.css";
-import BOXES from "./boxes.gif";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getWithExpiry, logOutUser, updateProblem } from "../Login/LoginSlicer";
 import EARTHGIF from "./Bharat.gif";
+import "./MainPage.css";
 import PEN from "./pen.png";
+
+function useForceUpdate() {
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue((value) => value + 1); // update the state to force render
+}
 
 export default function MainPage() {
   let user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   let problem = useSelector((state) => state.user.problem);
-
+  let change = 1;
   function updateWithStore(para) {
     problem = para;
   }
 
   useEffect(() => {
-    const problemKey = JSON.parse(localStorage.getItem("problemId")).value;
-    const token = JSON.parse(localStorage.getItem("token")).value;
+    const problemKey = getWithExpiry("problemId");
+    const token = getWithExpiry("token");
     axios
       .get(`http://127.0.0.1:8000/prob-detail/${problemKey}/`, {
         headers: {
@@ -35,7 +38,7 @@ export default function MainPage() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [change, dispatch, updateWithStore]);
 
   function onLogOutClick() {
     dispatch(logOutUser());
@@ -76,9 +79,40 @@ export default function MainPage() {
     setActiveTab.placeholder = "active";
   };
 
-  // const [editProblem, setEditProblem] = React.useState(false);
+  const [editProblem, setEditProblem] = React.useState(false);
 
-  // function handleProblemEdit() {}
+  function handleProblemEditSubmit(e) {
+    const url = `http://127.0.0.1:8000/prob-detail/${
+      getWithExpiry("problemId") || ""
+    }/`;
+    const payload = {
+      title: e.target[0].value || problem.problemName,
+      dataset_description: e.target[1].value || problem.description,
+    };
+
+    const headers = {
+      Authorization: `token ${getWithExpiry("token") || ""}`,
+    };
+
+    console.log(payload, url, headers);
+    console.log(url);
+
+    console.log(headers);
+
+    axios({
+      method: "put",
+      url: url,
+      headers: headers,
+      data: payload,
+    })
+      .then((res) => {
+        console.log(res);
+        setEditProblem(false);
+      })
+      .catch((err) => setEditProblem(false));
+
+    change = 2;
+  }
 
   return (
     <section className="MainPage" id="main">
@@ -127,7 +161,13 @@ export default function MainPage() {
         <div className="Content">
           <div className="dataAndEdit">
             <h2>Problem Details</h2>
-            <img src={PEN} className="pen" />
+            <img
+              src={PEN}
+              className="pen"
+              onClick={() => {
+                setEditProblem(true);
+              }}
+            />
           </div>
 
           <hr></hr>
@@ -145,7 +185,32 @@ export default function MainPage() {
 
         {/* This is edit pop up */}
 
-        {/* <div className="editProblemPopup" hidden={editProblem}></div> */}
+        <div className="editProblemPopup" hidden={!editProblem}>
+          <form onSubmit={handleProblemEditSubmit}>
+            <div className="eform-group">
+              <a
+                id="close"
+                onClick={() => {
+                  setEditProblem(false);
+                }}
+              >
+                x{" "}
+              </a>
+              <label id="edetails">Title</label>
+              <input type="text" className="eform-control" />
+            </div>
+
+            <div className="eform-group">
+              <label id="edetails">Description</label>
+              <textarea type="text-area" className="eform-control" />
+            </div>
+
+            <br></br>
+            <button type="submit" className="btn btn-block btn-danger">
+              Save
+            </button>
+          </form>
+        </div>
 
         <div className="container rotatingEarth">
           <img src={EARTHGIF} className="box" />
