@@ -1,31 +1,38 @@
 export const isInactiveFresh = {
-  backgroundColor: "#2c302d",
+  //   backgroundColor: "#2c302d",
+  opacity: "0.1",
+  //   filter: "blur(5px)",
 };
 
 export const isInactiveState = {
-  backgroundColor: "#0a3816",
+  //   backgroundColor: "#0a3816",
+  // opacity: "",
   //   backgroundImage: 'url("mars.jpg")',
+  //   filter: "sepia(82%)",
 };
 
 export const isActiveYellow = {
-  backgroundColor: "#80740e",
+  //   backgroundColor: "#80740e",
   boxShadow: "0px 0px 50px yellow",
+  animation: "moonimate 5s linear infinite",
 };
 
 export const isActiveRed = {
-  backgroundColor: "#571911",
   boxShadow: "0px 0px 50px red",
+  animation: "moonimate 5s linear infinite",
 };
 
 export const isActiveGreen = {
-  backgroundColor: "#548707",
-  boxShadow: "0px 0px 50px green",
+  boxShadow: "0px 0px 70px green",
+  //   animation: "moonimate 5s linear infinite",
 };
 
 export const titles = [
   "Acquisiion",
   "Cleaning",
   "Feature Selection",
-  "Modeliing",
-  "Reslts",
+  "Modelling",
+  "Results",
 ];
+
+export const numbers = ["one", "two", "three", "four", "five"];

@@ -4,10 +4,15 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getWithExpiry, logOutUser, updateProblem } from "../Login/LoginSlicer";
-import EARTHGIF from "./Bharat.gif";
+import EARTHGIF from "./assets/Bharat.gif";
 import "./MainPage.css";
-import PEN from "./pen.png";
+import PEN from "./assets/pen.png";
 import * as stageHelper from "./utils.js";
+import TICK from "./assets/ticked.png";
+import LIKE from "./assets/like.png";
+import DISLIKE from "./assets/dislike.png";
+import HALF from "./assets/paste.gif";
+
 function useForceUpdate() {
   const [value, setValue] = useState(0); // integer state
   return () => setValue((value) => value + 1); // update the state to force render
@@ -18,6 +23,8 @@ export default function MainPage() {
   const dispatch = useDispatch();
   let problem = useSelector((state) => state.user.problem);
   let change = 1;
+  const [value, setValue] = useState(0);
+
   function updateWithStore(para) {
     problem = para;
   }
@@ -38,7 +45,7 @@ export default function MainPage() {
       .catch((err) => {
         console.log(err);
       });
-  }, [change, dispatch, updateWithStore]);
+  }, [change, dispatch, updateWithStore, value]);
 
   function onLogOutClick() {
     dispatch(logOutUser());
@@ -113,7 +120,38 @@ export default function MainPage() {
         })
         .catch((err) => setEditProblem(false));
     }
-    change = 2;
+    change = 3;
+  }
+
+  function handleLike(pk, id) {
+    const url = `http://127.0.0.1:8000/stage-detail/update/${pk}/`;
+    const payload = {
+      s_number: id,
+      isActivated: true,
+      state: "GREEN",
+      isComplete: true,
+    };
+    const headers = {
+      Authorization: `token ${getWithExpiry("token") || ""}`,
+    };
+
+    console.log(payload, url, headers);
+    console.log(url);
+    console.log(headers);
+    // console.log(payload{});
+
+    axios({
+      method: "put",
+      url: url,
+      headers: headers,
+      data: payload,
+    })
+      .then((res) => {
+        console.log(res);
+        // setEditProblem(false);
+      })
+      .catch((err) => setEditProblem(false));
+    setValue(id);
   }
 
   let loopIds = [1, 2, 3, 4, 5];
@@ -147,7 +185,7 @@ export default function MainPage() {
           </li>
           <li>
             <a
-              href="#support"
+              href="#Support"
               id="support"
               className={activeTab.support}
               onClick={toggleClassName}
@@ -259,15 +297,78 @@ export default function MainPage() {
             );
 
             return (
-              <div style={style} className="Stage">
+              <>
                 <div id="numberAndName">
-                  <h5>{id}</h5>
+                  <div
+                    style={style}
+                    className={`Stage ${stageHelper.numbers[id - 1]}`}
+                  />
+                  <h5>{id} </h5>
                   <h4>{stageHelper.titles[id - 1]}</h4>
+                  <div className="tickme">
+                    <img
+                      src={TICK}
+                      id="tick"
+                      hidden={id >= stageDetails.stageNumber}
+                    ></img>
+                  </div>
+
+                  <div
+                    className="buttonContainer"
+                    hidden={
+                      !(
+                        stageDetails.state === "GREEN" &&
+                        id === stageDetails.stageNumber
+                      ) || id === 5
+                    }
+                  >
+                    <h6>Move to Next Stage?</h6>
+                    <div id="onlyButtons">
+                      <img
+                        src={LIKE}
+                        onClick={() => handleLike(stageDetails.pk, id)}
+                        id="tick"
+                        href="#Solution"
+                      />
+                      <img src={DISLIKE} id="tick" />
+                    </div>
+                  </div>
                 </div>
-                {/* <button hidden={hidden}>bhow</button> */}
-              </div>
+              </>
             );
           })}
+        </div>
+        <h5>LIVE Progress Tracking. Scroll down for more info</h5>
+        <h6>
+          Note: Once you decide to move to next stage, going back will not be
+          possible.
+        </h6>
+      </section>
+
+      <section className="Support" id="Support">
+        <div className="GIF">
+          <img src={HALF} id="supportgif" />
+        </div>
+
+        <div className="helpContainer">
+          <div id="describe">
+            <div id="green"></div>
+            <h4>Ready to be tested</h4>
+          </div>
+
+          <div id="describe">
+            <div id="red"></div>
+            <h4>Yet not started</h4>
+          </div>
+
+          <div id="describe">
+            <div id="yellow"></div>
+            <h4>In progress</h4>
+          </div>
+
+          <div id="helpline">
+            <h6>Contact: help@x-plora.com</h6>
+          </div>
         </div>
       </section>
     </div>
