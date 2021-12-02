@@ -562,6 +562,13 @@ class SolutionLinkView( mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     generics.GenericAPIView,):
     
+    """ request_method = get
+    request url = http://127.0.0.1:8000/solutionLink/<int:pk>/
+
+    will return  soltuion link with specified id 
+    """
+
+
     queryset = Solution.objects.all()
     serializer_class = SolutionSerializer
     permission_classes = [IsAuthenticated]
