@@ -222,7 +222,10 @@ export default function MainPage() {
           <h5>Description</h5>
           <h3 id="contentProblem">{problem.description}</h3>
 
-          <footer>Note: Please send your dataset to xplora@gmail.com</footer>
+          <footer>
+            Note: Please send your dataset to xplora@gmail.com Please don't add
+            any C.I.D with your dataset
+          </footer>
         </div>
 
         {/* This is edit pop up */}
