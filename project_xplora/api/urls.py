@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import  CreateProblemView , SolutionStageUpdateview, GetAndDestroyStagesDetail, GetView , UserRegisterView, UserDetail,CustomAuthToken , ProblemDetail , UserLogoutView, TestAuthView
+from .views import   SolutionLinkView, CreateProblemView , SolutionStageUpdateview, GetAndDestroyStagesDetail, GetView , UserRegisterView, UserDetail,CustomAuthToken , ProblemDetail , UserLogoutView, TestAuthView
 from django.urls import path, include
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
@@ -20,6 +20,7 @@ urlpatterns = [
     path('user-detail/<int:pk>/', UserDetail.as_view()),
     path('stage-detail/update/<int:pk>/', SolutionStageUpdateview.as_view()),
     path('stage-detail/<int:pk>/', GetAndDestroyStagesDetail.as_view()),
+    path('solutionLink/', SolutionLinkView.as_view()),
     path('users' , GetView.as_view() ),
     path('login/', CustomAuthToken.as_view()),
     path('logout/',UserLogoutView.as_view()),

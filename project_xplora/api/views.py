@@ -215,7 +215,6 @@ class CreateProblemView(generics.ListCreateAPIView):
                     "email": user.email,
                 },
                 "GeneratedProblemData": {
-                    
                     "problem_PK": problem.pk,
                     "problem_Title": problem.title,
                     "problem_Dataset_description": problem.dataset_description,
@@ -557,3 +556,16 @@ class UserLogoutView(generics.ListAPIView):
     def get(self, request, format=None, *args, **kwargs):
         request.user.auth_token.delete()
         return Response("User Logged out successfully")
+
+class SolutionLinkView( mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView,):
+    
+    queryset = Solution.objects.all()
+    serializer_class = SolutionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
