@@ -563,9 +563,10 @@ class SolutionLinkView( mixins.RetrieveModelMixin,
     generics.GenericAPIView,):
     
     """ request_method = get
-    request url = http://127.0.0.1:8000/solutionLink/<int:pk>/
+    request url = http://127.0.0.1:8000/solutionLink/
 
-    will return  soltuion link with specified id 
+    will return  soltuion link with specified problem_id 
+    payload = problem_id
     """
 
 
@@ -574,5 +575,11 @@ class SolutionLinkView( mixins.RetrieveModelMixin,
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+        pk = int(request.data['problem_id'])
 
+        problem = Problem.objects.filter(pk=pk).first()
+        solution = Solution.objects.filter(solution_to=problem).first()
+
+        serializer = SolutionSerializer(solution)
+
+        return Response(serializer.data)

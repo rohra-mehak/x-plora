@@ -20,7 +20,7 @@ class ProblemSerializer(serializers.ModelSerializer):
 class SolutionSerializer(serializers.ModelSerializer):
     class Meta :
           model = Solution
-          fields = ('id', 'solution_to' , 'solution_link')
+          fields = ('solution_to' , 'solution_link')
         #   fields = "__all__"
 
 
