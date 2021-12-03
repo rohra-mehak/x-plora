@@ -123,8 +123,8 @@ class CustomAuthToken(ObtainAuthToken):
             for problem in problems:
 
                 stage = Solution_Stage.objects.filter(belongs_to=problem).first()
-
-                problem_list.append(
+                if not(stage.s_number == 5 and stage.isComplete == True):
+                       problem_list.append(
                     {
                         "problem_PK": problem.pk,
                         "problem_Title": problem.title,
@@ -138,7 +138,7 @@ class CustomAuthToken(ObtainAuthToken):
                         },
                     }
                 )
-            print(problem_list)
+                print(problem_list)
         else:
             problem_list = []
 
@@ -390,6 +390,43 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
                         "text": "Stage not completed by the analyst yet or is inActive, wait for state to turn green , or check your data  data not updated ",
                     }
                 )
+                
+        elif state == "GREEN" and isActivated == True:
+            if isComplete == False:
+                if s_number != stage.s_number:
+                    print(type(request.data))
+                    return Response(
+                        {
+                            "text": "User is at stage {0}   . Please check the current stage number , Increment to this is not possible ".format(
+                                stage.s_number
+                            ),
+                        },
+                        status=status.HTTP_406_NOT_ACCEPTABLE,
+                    )
+
+                new_data = {
+                    "s_number": s_number,
+                    "state": "YELLOW",
+                    "isActivated": True,
+                    "isComplete": False,
+                }
+
+                for key, value in new_data.items():
+                    setattr(stage, key, value)
+                    stage.save()
+
+                serializer = Solution_StageSerializer(stage, data=new_data)
+                serializer.is_valid(raise_exception=True)
+                self.perform_update(serializer)
+                serializer.save()
+
+                return Response(
+                    {
+                        "text": "Stage changed to yellow, data analyst will resume work    ",
+                        "Data": serializer.data,
+                    }
+                )
+
 
         elif state == "GREEN" and isActivated == True:
             if isComplete == True:
