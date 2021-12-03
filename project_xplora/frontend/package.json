@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.2",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
+    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.24.0",
     "bootstrap": "^5.1.3",
@@ -20,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "cypress open",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@types/scrollmagic": "^2.0.2",
+    "cypress": "^9.1.0",
     "gsap": "^3.8.0"
   }
 }

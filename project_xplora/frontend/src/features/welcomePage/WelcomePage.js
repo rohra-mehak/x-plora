@@ -30,7 +30,7 @@ export default function WelcomePage() {
 
   const { token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const history = useHistory();
+  // const history = useHistory();
 
   const submitProblem = (e) => {
     e.preventDefault();
@@ -56,7 +56,7 @@ export default function WelcomePage() {
         console.log("res from the problem crete", res);
 
         dispatch(updateProblem(res.data));
-        history.push("./main");
+        // history.push("./main");
       })
       .catch((err) => {
         console.log(headers);

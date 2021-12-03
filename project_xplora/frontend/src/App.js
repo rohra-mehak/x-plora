@@ -21,7 +21,7 @@ import Contact from "./features/contact/Contact";
 function App() {
   let isAuthorized = useSelector((state) => state.user.isAuthorized);
 
-  const history = useHistory();
+  // const history = useHistory();
   // const refAuth = useRef(isAuthorized);
   // function requireAuth(nextState, replace, next) {
   //   if (isAuthorized === true) {

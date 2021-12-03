@@ -60,7 +60,7 @@ function LandingPage() {
   const disp = isAuthorized ? "none !important" : "visible";
   console.log(disp);
 
-  const history = useHistory();
+  // const history = useHistory();
   return (
     <div className="App">
       <header>

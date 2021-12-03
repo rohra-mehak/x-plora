@@ -60,7 +60,7 @@ export default function Login(stat) {
   const didMountRefII = useRef(false);
 
   const dispatch = useDispatch();
-  const history = useHistory();
+  // const history = useHistory();
   useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
@@ -110,7 +110,7 @@ export default function Login(stat) {
           });
         });
     }
-  }, [dispatch, loginUserData, history]);
+  }, [dispatch, loginUserData]);
 
   useEffect(() => {
     if (!didMountRefII.current) {

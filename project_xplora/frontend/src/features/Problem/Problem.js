@@ -44,7 +44,7 @@ function Problem(props) {
   return (
     <div className="main_container">
       <div className="editProblemPopup">
-        <h2 id="pro">Create a Poblem</h2>
+        <h2 id="pro">Create a Problem</h2>
         <form onSubmit={submitProblem}>
           <div className="eform-group">
             <label id="edetails">Title</label>
