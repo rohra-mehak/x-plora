@@ -124,6 +124,7 @@ class CustomAuthToken(ObtainAuthToken):
 
                 stage = Solution_Stage.objects.filter(belongs_to=problem).first()
                 if not(stage.s_number == 5 and stage.isComplete == True):
+
                        problem_list.append(
                     {
                         "problem_PK": problem.pk,
@@ -614,7 +615,7 @@ class SolutionLinkView(
         print(request.data)
 
         problem_id = request.data["problem_id"]
-        print(problem_id)
+        
 
         pk = int(problem_id)
 
