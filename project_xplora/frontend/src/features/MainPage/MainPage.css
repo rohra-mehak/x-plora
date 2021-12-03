@@ -1,5 +1,6 @@
 .MainPage {
   min-height: 200vh;
+  overflow-x: hidden;
   /* width: 100%; */
 }
 
@@ -60,6 +61,11 @@ button {
   background-color: #292358; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
+#contentProblem {
+  overflow-y: auto;
+  max-height: 15vh;
+  /* word-wrap: break-word; */
+}
 .container {
   display: flex;
   align-items: center;
@@ -71,7 +77,9 @@ button {
   width: 40vw;
   position: relative;
 }
-
+#live {
+  margin-bottom: 10px;
+}
 .box {
   height: 80%;
   width: auto;

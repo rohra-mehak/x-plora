@@ -123,13 +123,13 @@ export default function MainPage() {
     change = 3;
   }
 
-  function handleLike(pk, id) {
+  function handleLike(pk, id, like_) {
     const url = `http://127.0.0.1:8000/stage-detail/update/${pk}/`;
     const payload = {
       s_number: id,
       isActivated: true,
       state: "GREEN",
-      isComplete: true,
+      isComplete: like_,
     };
     const headers = {
       Authorization: `token ${getWithExpiry("token") || ""}`,
@@ -151,11 +151,31 @@ export default function MainPage() {
         // setEditProblem(false);
       })
       .catch((err) => setEditProblem(false));
-    setValue(id);
+    setValue(id + Math.random());
   }
 
   let loopIds = [1, 2, 3, 4, 5];
 
+  function handleLinkOpen() {
+    const problemId = user.problem.problemId;
+    console.log(problemId);
+    const token = getWithExpiry("token");
+    const headers = {
+      Authorization: `token ${token}`,
+    };
+
+    const payload = {
+      problem_id: problemId,
+    };
+
+    console.log(payload);
+    const url = "http://127.0.0.1:8000/solutionLink/";
+    axios({
+      url: url,
+      headers: headers,
+      data: payload,
+    }).then((res) => console.log(res));
+  }
   return (
     <div className="MainPage" id="main">
       <header>
@@ -215,7 +235,7 @@ export default function MainPage() {
           <hr></hr>
           <h5>Title</h5>
 
-          <h3 id="contentProblem">{problem.problemName}</h3>
+          <h3>{problem.problemName}</h3>
 
           <br></br>
 
@@ -326,11 +346,16 @@ export default function MainPage() {
                     <div id="onlyButtons">
                       <img
                         src={LIKE}
-                        onClick={() => handleLike(stageDetails.pk, id)}
+                        onClick={() => handleLike(stageDetails.pk, id, true)}
                         id="tick"
                         href="#Solution"
                       />
-                      <img src={DISLIKE} id="tick" />
+                      <img
+                        src={DISLIKE}
+                        id="tick"
+                        href="#Solution"
+                        onClick={() => handleLike(stageDetails.pk, id, false)}
+                      />
                     </div>
                   </div>
                 </div>
@@ -338,6 +363,9 @@ export default function MainPage() {
             );
           })}
         </div>
+        <button id="live" onClick={() => handleLinkOpen()}>
+          Check LIVE results
+        </button>
         <h5>LIVE Progress Tracking. Scroll down for more info</h5>
         <h6>
           Note: Once you decide to move to next stage, going back will not be
@@ -352,11 +380,6 @@ export default function MainPage() {
 
         <div className="helpContainer">
           <div id="describe">
-            <div id="green"></div>
-            <h4>Ready to be tested</h4>
-          </div>
-
-          <div id="describe">
             <div id="red"></div>
             <h4>Yet not started</h4>
           </div>
@@ -366,8 +389,14 @@ export default function MainPage() {
             <h4>In progress</h4>
           </div>
 
+          <div id="describe">
+            <div id="green"></div>
+            <h4>Ready to be tested</h4>
+          </div>
+
           <div id="helpline">
             <h6>Contact: help@x-plora.com</h6>
+            <h6>Call: +48 729636533</h6>
           </div>
         </div>
       </section>
