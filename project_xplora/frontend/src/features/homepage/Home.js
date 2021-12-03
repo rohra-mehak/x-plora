@@ -88,7 +88,7 @@ function Homepage() {
               <span></span>
               <h2>3</h2>
             </div>
-            <div id="Content"> Get your Visulizations </div>
+            <div id="Content"> Get your Solutions </div>
           </div>
         </div>
       </section>

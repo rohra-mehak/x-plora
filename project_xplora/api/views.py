@@ -557,9 +557,7 @@ class UserLogoutView(generics.ListAPIView):
         request.user.auth_token.delete()
         return Response("User Logged out successfully")
 
-class SolutionLinkView( mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
+class SolutionLinkView(
     generics.GenericAPIView,):
     
     """ request_method = get
@@ -574,8 +572,14 @@ class SolutionLinkView( mixins.RetrieveModelMixin,
     serializer_class = SolutionSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
-        pk = int(request.data['problem_id'])
+    def post(self, request, *args, **kwargs):
+        # print("-------------\n\n")
+        print(request.data)
+
+        problem_id = request.data["problem_id"]
+        print(problem_id)
+
+        pk = int(problem_id)
 
         problem = Problem.objects.filter(pk=pk).first()
         solution = Solution.objects.filter(solution_to=problem).first()

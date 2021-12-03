@@ -165,16 +165,17 @@ export default function MainPage() {
     };
 
     const payload = {
-      problem_id: problemId,
+      "problem_id": problemId,
     };
 
     console.log(payload);
     const url = "http://127.0.0.1:8000/solutionLink/";
     axios({
+      method: "POST",
       url: url,
       headers: headers,
       data: payload,
-    }).then((res) => console.log(res));
+    }).then((res) => window.open(res.data.solution_link, '_solution'));
   }
   return (
     <div className="MainPage" id="main">
@@ -339,7 +340,7 @@ export default function MainPage() {
                       !(
                         stageDetails.state === "GREEN" &&
                         id === stageDetails.stageNumber
-                      ) || id === 5
+                      )
                     }
                   >
                     <h6>Move to Next Stage?</h6>
