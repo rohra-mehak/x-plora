@@ -390,7 +390,7 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
                         "text": "Stage not completed by the analyst yet or is inActive, wait for state to turn green , or check your data  data not updated ",
                     }
                 )
-                
+
         elif state == "GREEN" and isActivated == True:
             if isComplete == False:
                 if s_number != stage.s_number:
