@@ -370,17 +370,41 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
                         "isActivated": False,
                         "isComplete": True,
                     }
-                for key, value in new_data.items():
-                    setattr(stage, key, value)
-                    stage.save()
+                    for key, value in new_data.items():
+                        setattr(stage, key, value)
+                        stage.save()
 
-                serializer = Solution_StageSerializer(stage, data=new_data)
-                serializer.is_valid(raise_exception=True)
-                self.perform_update(serializer)
-                serializer.save()
-                return Response(
+                    serializer = Solution_StageSerializer(stage, data=new_data)
+                    serializer.is_valid(raise_exception=True)
+                    self.perform_update(serializer)
+                    serializer.save()
+                    return Response(
                     {
                         "text": "This the last stage, stage is complete, problem must be finished  ",
+                        "Data": serializer.data,
+                    }
+                )
+                else :
+                    
+                    new_data = {
+                    "s_number": s_number,
+                    "state": "YELLOW",
+                    "isActivated": True,
+                    "isComplete": False,
+                }
+
+                    for key, value in new_data.items():
+                       setattr(stage, key, value)
+                       stage.save()
+
+                    serializer = Solution_StageSerializer(stage, data=new_data)
+                    serializer.is_valid(raise_exception=True)
+                    self.perform_update(serializer)
+                    serializer.save()
+
+                    return Response(
+                    {
+                        "text": "Stage changed to yellow, data analyst will resume work    ",
                         "Data": serializer.data,
                     }
                 )
