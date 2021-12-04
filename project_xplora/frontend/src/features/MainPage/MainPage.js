@@ -156,6 +156,7 @@ export default function MainPage() {
 
   let loopIds = [1, 2, 3, 4, 5];
 
+  const [dislike, setdDislike] = useState(false);
   function handleLinkOpen() {
     const problemId = user.problem.problemId;
     console.log(problemId);
@@ -165,7 +166,7 @@ export default function MainPage() {
     };
 
     const payload = {
-      "problem_id": problemId,
+      problem_id: problemId,
     };
 
     console.log(payload);
@@ -175,7 +176,7 @@ export default function MainPage() {
       url: url,
       headers: headers,
       data: payload,
-    }).then((res) => window.open(res.data.solution_link, '_solution'));
+    }).then((res) => window.open(res.data.solution_link, "_solution"));
   }
   return (
     <div className="MainPage" id="main">
@@ -372,6 +373,8 @@ export default function MainPage() {
           Note: Once you decide to move to next stage, going back will not be
           possible.
         </h6>
+
+        <div className="notification"></div>
       </section>
 
       <section className="Support" id="Support">

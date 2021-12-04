@@ -44,23 +44,33 @@ function Problem(props) {
   return (
     <div className="main_container">
       <div className="editProblemPopup">
-        <h2 id="pro">Create a Poblem</h2>
-        <form onSubmit={submitProblem}>
-          <div className="eform-group">
-            <label id="edetails">Title</label>
-            <input type="text" className="eform-control" />
-          </div>
+        <div className="formed">
+          <h2 id="pro">Create a Poblem</h2>
+          <form onSubmit={submitProblem}>
+            <div className="eform-group">
+              <label id="edetails">Title</label>
+              <input type="text" className="eform-control" />
+            </div>
 
-          <div className="eform-group">
-            <label id="edetails">Description</label>
-            <textarea type="text-area" className="eform-control" />
-          </div>
+            <div className="eform-group">
+              <label id="edetails">Description</label>
+              <textarea type="text-area" className="eform-control" />
+            </div>
 
-          <br></br>
-          <button type="submit" className="btn btn-block btn-danger">
-            Save
-          </button>
-        </form>
+            <br></br>
+            <button type="submit" className="btn btn-block btn-danger">
+              Save
+            </button>
+          </form>
+        </div>
+
+        <div className="noticeMe">
+          <h2>Note:</h2>
+          <h3>
+            Please send your data to x-plora@gmail.com in order to start the
+            EDA. Data should not contain Client identifying information
+          </h3>
+        </div>
       </div>
     </div>
   );
