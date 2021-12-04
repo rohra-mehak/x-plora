@@ -123,22 +123,22 @@ class CustomAuthToken(ObtainAuthToken):
             for problem in problems:
 
                 stage = Solution_Stage.objects.filter(belongs_to=problem).first()
-                if not(stage.s_number == 5 and stage.isComplete == True):
+                if not (stage.s_number == 5 and stage.isComplete == True):
 
-                       problem_list.append(
-                    {
-                        "problem_PK": problem.pk,
-                        "problem_Title": problem.title,
-                        "problem_Dataset_description": problem.dataset_description,
-                        "problem_stage_data": {
-                            "stage_Pk": stage.pk,
-                            "state": stage.state,
-                            "s_number": stage.s_number,
-                            "isActivated": stage.isActivated,
-                            "isComplete": stage.isComplete,
-                        },
-                    }
-                )
+                    problem_list.append(
+                        {
+                            "problem_PK": problem.pk,
+                            "problem_Title": problem.title,
+                            "problem_Dataset_description": problem.dataset_description,
+                            "problem_stage_data": {
+                                "stage_Pk": stage.pk,
+                                "state": stage.state,
+                                "s_number": stage.s_number,
+                                "isActivated": stage.isActivated,
+                                "isComplete": stage.isComplete,
+                            },
+                        }
+                    )
                 print(problem_list)
         else:
             problem_list = []
@@ -427,11 +427,7 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
                         "Data": serializer.data,
                     }
                 )
-
-
-        elif state == "GREEN" and isActivated == True:
-            if isComplete == True:
-                # print("im here updating data")
+            else :
                 if s_number != stage.s_number:
                     print(type(request.data))
                     return Response(
@@ -444,13 +440,12 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
                     )
 
                 new_data = {
-                    "s_number": s_number + 1,
-                    "state": "RED",
+                    "s_number": s_number +1,
+                    "state": "GREEN",
                     "isActivated": True,
                     "isComplete": False,
                 }
-                # track_stages(deserializer.data)
-                # track_stages(new_data)
+
                 for key, value in new_data.items():
                     setattr(stage, key, value)
                     stage.save()
@@ -462,16 +457,55 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
 
                 return Response(
                     {
-                        "text": "you have moved to the next stage   ",
+                        "text": "you have moved to the next stage     ",
                         "Data": serializer.data,
                     }
                 )
-            else:
-                return Response(
-                    {
-                        "text": "Stage is not complete, you ccannot move to next stage. check if isComplete is True"
-                    }
-                )
+
+
+        # elif state == "GREEN" and isActivated == True:
+        #     if isComplete == True:
+        #         # print("im here updating data")
+        #         if s_number != stage.s_number:
+        #             print(type(request.data))
+        #             return Response(
+        #                 {
+        #                     "text": "User is at stage {0}   . Please check the current stage number , Increment to this is not possible ".format(
+        #                         stage.s_number
+        #                     ),
+        #                 },
+        #                 status=status.HTTP_406_NOT_ACCEPTABLE,
+        #             )
+
+        #         new_data = {
+        #             "s_number": s_number + 1,
+        #             "state": "RED",
+        #             "isActivated": True,
+        #             "isComplete": False,
+        #     }
+        #         # track_stages(deserializer.data)
+        #         # track_stages(new_data)
+        #         for key, value in new_data.items():
+        #              setattr(stage, key, value)
+        #              stage.save()
+
+        #         serializer = Solution_StageSerializer(stage, data=new_data)
+        #         serializer.is_valid(raise_exception=True)
+        #         self.perform_update(serializer)
+        #         serializer.save()
+
+        #         return Response(
+        #             {
+        #                 "text": "you have moved to the next stage   ",
+        #                 "Data": serializer.data,
+        #             }
+        #         )
+        #     else:
+        #         return Response(
+        #             {
+        #                 "text": "Stage is not complete, you ccannot move to next stage. check if isComplete is True"
+        #             }
+        #         )
 
         else:
             new_data = {
@@ -489,7 +523,7 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
         return Response(
             {
                 "text": "Stage not completed by the analyst yet or is inActive, wait for state to turn green , or check your data  data not updated ",
-                "Data": serializer.data,
+                # "Data": serializer.data,
             }
         )
 
@@ -595,16 +629,17 @@ class UserLogoutView(generics.ListAPIView):
         request.user.auth_token.delete()
         return Response("User Logged out successfully")
 
+
 class SolutionLinkView(
-    generics.GenericAPIView,):
-    
-    """ request_method = get
+    generics.GenericAPIView,
+):
+
+    """request_method = get
     request url = http://127.0.0.1:8000/solutionLink/
 
-    will return  soltuion link with specified problem_id 
+    will return  soltuion link with specified problem_id
     payload = problem_id
     """
-
 
     queryset = Solution.objects.all()
     serializer_class = SolutionSerializer
@@ -615,8 +650,6 @@ class SolutionLinkView(
         print(request.data)
 
         problem_id = request.data["problem_id"]
-        
-
         pk = int(problem_id)
 
         problem = Problem.objects.filter(pk=pk).first()
