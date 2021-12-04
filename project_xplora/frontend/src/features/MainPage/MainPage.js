@@ -12,7 +12,7 @@ import TICK from "./assets/ticked.png";
 import LIKE from "./assets/like.png";
 import DISLIKE from "./assets/dislike.png";
 import HALF from "./assets/paste.gif";
-
+import "../Login/Login.css";
 function useForceUpdate() {
   const [value, setValue] = useState(0); // integer state
   return () => setValue((value) => value + 1); // update the state to force render
@@ -131,6 +131,10 @@ export default function MainPage() {
       state: "GREEN",
       isComplete: like_,
     };
+
+    if (!like_) {
+      setDislike(true);
+    }
     const headers = {
       Authorization: `token ${getWithExpiry("token") || ""}`,
     };
@@ -156,7 +160,7 @@ export default function MainPage() {
 
   let loopIds = [1, 2, 3, 4, 5];
 
-  const [dislike, setdDislike] = useState(false);
+  const [dislike, setDislike] = useState(false);
   function handleLinkOpen() {
     const problemId = user.problem.problemId;
     console.log(problemId);
@@ -374,7 +378,17 @@ export default function MainPage() {
           possible.
         </h6>
 
-        <div className="notification"></div>
+        <div className="notification" hidden={!dislike}>
+          <a
+            id="x"
+            onClick={() => {
+              setDislike(false);
+            }}
+          >
+            x
+          </a>
+          <h4>Problem Reported. Out Data analysts will contact you soon.</h4>
+        </div>
       </section>
 
       <section className="Support" id="Support">

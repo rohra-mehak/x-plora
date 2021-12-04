@@ -218,6 +218,40 @@ footer {
   text-align: center;
 }
 
+.notification {
+  position: absolute;
+  z-index: 12;
+  height: 300px;
+  width: 500px;
+  background-color: rgba(153, 74, 74, 0.932);
+  border-radius: 47% 53% 31% 69% / 33% 30% 70% 67%;
+  left: 50%;
+  top: 150%;
+  /* background-color: antiquewhite; */
+  transform: translate(-50%, -50%);
+  display: flex;
+  color: rgb(8, 8, 8);
+  align-items: center;
+  padding: 55px;
+}
+.notification text {
+  color: aliceblue;
+}
+
+#x {
+  position: absolute;
+  top: 10%;
+  color: aliceblue;
+  right: 15%;
+  pointer-events: stroke;
+  background-color: #292358;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  padding: 2px;
+  cursor: pointer;
+}
 .Stage {
   margin: 20px;
   height: 25vh;
