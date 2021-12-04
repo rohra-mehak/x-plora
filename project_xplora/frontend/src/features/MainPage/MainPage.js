@@ -152,6 +152,10 @@ export default function MainPage() {
     })
       .then((res) => {
         console.log(res);
+        if (id === 5 && like_) {
+          console.log("erer");
+          localStorage.removeItem("problemId");
+        }
         // setEditProblem(false);
       })
       .catch((err) => setEditProblem(false));
