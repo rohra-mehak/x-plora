@@ -141,7 +141,7 @@ h3 {
 
 .editProblemPopup {
   height: auto;
-  width: 600px;
+  width: 800px;
   border-radius: 10px;
   background-color: rgba(43, 38, 122, 0.424);
   position: absolute;
@@ -179,6 +179,7 @@ h3 {
 
 #edetails {
   font-size: 1.5em;
+  width: 700px;
 }
 
 /* HERE STARTS TJE FA<E<AFpkde;lfkds */
@@ -218,7 +219,7 @@ footer {
   text-align: center;
 }
 
-.notification {
+.notificationoo {
   position: absolute;
   z-index: 12;
   height: 300px;

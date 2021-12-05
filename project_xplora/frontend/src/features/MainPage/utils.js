@@ -28,7 +28,7 @@ export const isActiveGreen = {
 };
 
 export const titles = [
-  "Acquisiion",
+  "Acquisition",
   "Cleaning",
   "Feature Selection",
   "Modelling",

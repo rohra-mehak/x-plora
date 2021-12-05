@@ -39,7 +39,14 @@ export default function MainPage() {
         },
       })
       .then((res) => {
-        dispatch(updateProblem(res.data));
+        console.log("............", res, problemKey);
+        const stg = res.data.problem_stage_data;
+
+        if (!stg.isActivated && stg.s_number === 5) {
+          dispatch(updateProblem({ ...res.data, addKey: false }));
+        } else {
+          dispatch(updateProblem({ ...res.data, addKey: true }));
+        }
         updateWithStore(res);
       })
       .catch((err) => {
@@ -135,6 +142,7 @@ export default function MainPage() {
     if (!like_) {
       setDislike(true);
     }
+
     const headers = {
       Authorization: `token ${getWithExpiry("token") || ""}`,
     };
@@ -154,16 +162,28 @@ export default function MainPage() {
         console.log(res);
         if (id === 5 && like_) {
           console.log("erer");
+
+          setHideManually(true);
           localStorage.removeItem("problemId");
+          console.log(getWithExpiry("problemId") || "lull deleted");
         }
         // setEditProblem(false);
       })
       .catch((err) => setEditProblem(false));
     setValue(id + Math.random());
+    if (like_ && id === 5) {
+      setHideManually(true);
+      // localStorage.removeItem('problemId');
+      localStorage.removeItem("username");
+      localStorage.removeItem("isAuthorized");
+      localStorage.removeItem("token");
+
+      console.log("got you bro");
+    }
   }
 
   let loopIds = [1, 2, 3, 4, 5];
-
+  const [hideManually, setHideManually] = useState(false);
   const [dislike, setDislike] = useState(false);
   function handleLinkOpen() {
     const problemId = user.problem.problemId;
@@ -252,7 +272,9 @@ export default function MainPage() {
           <h5>Description</h5>
           <h3 id="contentProblem">{problem.description}</h3>
 
-          <footer>Note: Please send your dataset to xplora@gmail.com</footer>
+          <footer>
+            Note: Please send your dataset to help.xplora@gmail.com
+          </footer>
         </div>
 
         {/* This is edit pop up */}
@@ -349,7 +371,7 @@ export default function MainPage() {
                       !(
                         stageDetails.state === "GREEN" &&
                         id === stageDetails.stageNumber
-                      )
+                      ) || hideManually
                     }
                   >
                     <h6>Move to Next Stage?</h6>
@@ -382,7 +404,7 @@ export default function MainPage() {
           possible.
         </h6>
 
-        <div className="notification" hidden={!dislike}>
+        <div className="notificationoo" hidden={!dislike}>
           <a
             id="x"
             onClick={() => {
@@ -391,7 +413,7 @@ export default function MainPage() {
           >
             x
           </a>
-          <h4>Problem Reported. Out Data analysts will contact you soon.</h4>
+          <h4>Problem Reported. Our Data Analysts will contact you soon.</h4>
         </div>
       </section>
 
