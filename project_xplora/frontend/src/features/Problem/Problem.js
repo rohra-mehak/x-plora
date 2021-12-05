@@ -32,7 +32,9 @@ function Problem(props) {
       )
       .then((res) => {
         console.log("res from the problem crete", res);
-        dispatch(updateProblem(res.data.GeneratedProblemData));
+        dispatch(
+          updateProblem({ ...res.data.GeneratedProblemData, addKey: true })
+        );
         submitted();
       })
       .catch((err) => {
@@ -45,7 +47,7 @@ function Problem(props) {
     <div className="main_container">
       <div className="editProblemPopup">
         <div className="formed">
-          <h2 id="pro">Create a Poblem</h2>
+          <h2 id="pro">Create a Problem</h2>
           <form onSubmit={submitProblem}>
             <div className="eform-group">
               <label id="edetails">Title</label>
@@ -67,7 +69,7 @@ function Problem(props) {
         <div className="noticeMe">
           <h2>Note:</h2>
           <h3>
-            Please send your data to x-plora@gmail.com in order to start the
+            Please send your data to help.xplora@gmail.com in order to start the
             EDA. Data should not contain Client identifying information
           </h3>
         </div>

@@ -134,7 +134,9 @@ export const LoginSlicer = createSlice({
       state.problem.stageDetails.state =
         action.payload.problem_stage_data.state;
 
-      setWithExpiry("problemId", action.payload.problem_PK, 1000000000000);
+      action.payload.addKey
+        ? setWithExpiry("problemId", action.payload.problem_PK, 1000000000000)
+        : console.log("smart");
     },
   },
 });

@@ -84,11 +84,12 @@ export default function Login(stat) {
           );
 
           if (isProblemCreated) {
-            console.log();
+            console.log(res.data.problem_list);
             dispatch(
               updateProblem({
                 ...res.data.problem_list[0],
                 type: "Email",
+                addKey: true,
               })
             );
             console.log(res);

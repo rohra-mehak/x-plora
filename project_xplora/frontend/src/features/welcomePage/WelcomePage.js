@@ -14,6 +14,8 @@ export default function WelcomePage() {
 
   useEffect(() => {
     console.log("Bhenchiod welcompage mounted");
+    console.log("is problem created", isProblemCreated === true);
+    console.log(getWithExpiry("problemId") || "lull");
     // isProblemCreated = getWithExpiry("problemId");
   }, []);
 
@@ -55,7 +57,7 @@ export default function WelcomePage() {
       .then((res) => {
         console.log("res from the problem crete", res);
 
-        dispatch(updateProblem(res.data));
+        dispatch(updateProblem({ ...res.data, addKey: false }));
         history.push("./main");
       })
       .catch((err) => {
