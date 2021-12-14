@@ -465,7 +465,7 @@ class SolutionStageUpdateview(generics.UpdateAPIView):
 
                 new_data = {
                     "s_number": s_number +1,
-                    "state": "GREEN",
+                    "state": "RED",
                     "isActivated": True,
                     "isComplete": False,
                 }
