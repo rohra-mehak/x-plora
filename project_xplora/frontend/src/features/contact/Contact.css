@@ -53,8 +53,6 @@ img {
   top: -5%;
   left: 45%;
   transform: scaleX(-1);
-  /* z-index: -1; */
-
   animation: animatePhone 1.1s linear infinite;
 }
 
@@ -65,7 +63,6 @@ img {
   transform: scaleX(-1);
   animation: animatePhone 1s linear infinite;
   object-fit: cover;
-  /* z-index: -1; */
 }
 
 #Phone5 {

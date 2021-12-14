@@ -42,8 +42,6 @@
 
 #shoot {
   position: absolute;
-  top: 50%;
-  left: 50%;
   height: 4px;
   width: 4px;
   background: #fff;

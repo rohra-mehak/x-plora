@@ -293,18 +293,15 @@ footer {
 @keyframes moonimate {
   0% {
     opacity: 0.2;
-    /* transform: rotate(0deg); */
   }
-
   50% {
     opacity: 1;
   }
-
   100% {
     opacity: 0.2;
-    /* transform: rotate(360deg); */
   }
 }
+
 #numberAndName {
   /* padding: 10px; */
   display: flex;

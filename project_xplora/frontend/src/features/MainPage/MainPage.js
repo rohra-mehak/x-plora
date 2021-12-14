@@ -425,7 +425,7 @@ export default function MainPage() {
         <div className="helpContainer">
           <div id="describe">
             <div id="red"></div>
-            <h4>Yet not started</h4>
+            <h4>Not yet started</h4>
           </div>
 
           <div id="describe">
